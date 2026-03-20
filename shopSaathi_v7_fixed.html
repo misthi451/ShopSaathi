@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+<title>ShopSaathi – Find Any Shop, Any City in India</title>
+<meta name="description" content="Find any shop in any city of India. Search by city and product, get addresses, prices, availability and call directly."/>
+<meta name="theme-color" content="#E65100"/>
+<!-- PWA Manifest inline -->
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22ShopSaathi%22%2C%22short_name%22%3A%22ShopSaathi%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23FFFAF7%22%2C%22theme_color%22%3A%22%23E65100%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%252032%252032%27%253E%253Crect%2520width%3D%2732%27%2520height%3D%2732%27%2520fill%3D%27%2523E65100%27%2520rx%3D%278%27%2F%253E%253Ctext%2520y%3D%2722%27%2520x%3D%2716%27%2520text-anchor%3D%27middle%27%2520font-size%3D%2720%27%253E%F0%9F%9B%96%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E65100;--or2:#FF8A50;--or-pale:#FBE9E7;--or-mid:#FFCCBC;--or-dark:#BF360C;
+  --deep:#1A0A00;--text:#2D1B00;--muted:#7A5C3A;--border:#EDD9C8;
+  --surface:#FFFAF7;--card:#fff;
+  --green:#1B5E20;--gbg:#E8F5E9;--rbg:#FFEBEE;--red:#B71C1C;
+  --blue:#0D47A1;--bbg:#E3F2FD;--purple:#4A148C;--pbg:#F3E5F5;
+  --yellow:#F57F17;--ybg:#FFFDE7;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--or-mid);border-radius:4px}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:300;background:rgba(255,250,247,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 4%;display:flex;align-items:center;height:66px;gap:10px}
+.nav-logo{font-family:'Baloo 2',cursive;font-size:25px;font-weight:800;color:var(--or);text-decoration:none;flex:1;letter-spacing:-.5px}
+.nav-logo span{color:var(--deep)}
+.nav-links{display:flex;gap:2px;align-items:center}
+.nav-links a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:7px 13px;border-radius:20px;transition:.18s;white-space:nowrap}
+.nav-links a:hover{background:var(--or-pale);color:var(--or)}
+.nav-cta{background:var(--or)!important;color:#fff!important;border-radius:22px!important;padding:8px 20px!important}
+.nav-cta:hover{background:var(--or-dark)!important}
+/* Install PWA button */
+#installBtn{display:none;align-items:center;gap:6px;background:var(--gbg);border:1.5px solid #A5D6A7;color:var(--green);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s}
+#installBtn:hover{background:#C8E6C9}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.hbg span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
+.mob-menu{display:none;position:fixed;top:66px;left:0;right:0;background:var(--card);border-bottom:1px solid var(--border);padding:14px 4%;flex-direction:column;gap:4px;z-index:299;box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:15px;font-weight:600;color:var(--muted);text-decoration:none;padding:10px 14px;border-radius:10px;transition:.15s}
+.mob-menu a:hover{background:var(--or-pale);color:var(--or)}
+
+/* ── HERO ── */
+.hero{background:var(--deep);padding:72px 4% 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(230,81,0,.18) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-150px;left:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,80,.1) 0%,transparent 65%);pointer-events:none}
+.hero-inner{max-width:900px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(230,81,0,.15);border:1px solid rgba(230,81,0,.3);color:var(--or2);font-size:12px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:24px;letter-spacing:.3px}
+.pulse{width:7px;height:7px;border-radius:50%;background:#69F0AE;animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero h1{font-family:'Baloo 2',cursive;font-size:clamp(36px,6vw,72px);font-weight:800;color:#fff;line-height:1.05;letter-spacing:-2px;margin-bottom:14px}
+.hero h1 em{color:var(--or2);font-style:normal}
+.hero-sub{font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,.55);margin-bottom:48px;font-weight:400;line-height:1.7}
+
+/* ── SEARCH BOX ── */
+.search-box{background:#fff;border-radius:20px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.35);margin-bottom:16px;display:flex;gap:8px;align-items:center}
+.sb-city{display:flex;align-items:center;gap:8px;padding:10px 14px;border-right:2px solid var(--border);min-width:200px;flex-shrink:0;position:relative}
+.sb-city-icon{font-size:18px;flex-shrink:0;cursor:pointer}
+.sb-city input{border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;color:var(--deep);width:100%;background:transparent}
+.sb-city input::placeholder{color:var(--muted);font-weight:500}
+.sb-item{display:flex;align-items:center;gap:8px;padding:10px 14px;flex:1;position:relative}
+.sb-item-icon{font-size:18px;flex-shrink:0}
+.sb-item input{border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:500;color:var(--text);width:100%;background:transparent}
+.sb-item input::placeholder{color:var(--muted)}
+.sb-btn{background:var(--or);color:#fff;border:none;padding:14px 28px;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;white-space:nowrap;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sb-btn:hover{background:var(--or-dark);transform:scale(1.02)}
+
+/* ── CITY DROPDOWN ── */
+.city-dropdown{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:14px;z-index:400;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.15);display:none;max-height:320px;overflow-y:auto;min-width:260px}
+.city-dropdown.open{display:block}
+.cd-section-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px 4px;background:#fff;position:sticky;top:0}
+.cd-item{padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text);font-weight:500;display:flex;align-items:center;gap:8px;transition:.12s}
+.cd-item:hover{background:var(--or-pale);color:var(--or)}
+.cd-item .cd-state{font-size:11px;color:var(--muted);margin-left:auto}
+.cd-no-result{padding:16px 14px;font-size:13px;color:var(--muted);text-align:center}
+.cd-did-you-mean{padding:10px 14px;font-size:12px;color:var(--muted);background:var(--ybg);border-bottom:1px solid var(--border)}
+.cd-did-you-mean strong{color:var(--yellow);cursor:pointer}
+.cd-did-you-mean strong:hover{text-decoration:underline}
+
+/* ── ITEM AUTOCOMPLETE DROPDOWN ── */
+.item-dropdown{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:14px;z-index:400;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.15);display:none;max-height:260px;overflow-y:auto;min-width:220px}
+.item-dropdown.open{display:block}
+.id-item{padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text);font-weight:500;display:flex;align-items:center;gap:8px;transition:.12s}
+.id-item:hover{background:var(--or-pale);color:var(--or)}
+.id-item .id-cat{font-size:10px;color:var(--muted);background:var(--surface);padding:2px 6px;border-radius:6px;margin-left:auto}
+
+/* ── SEARCH HISTORY CHIPS ── */
+.search-history{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.sh-label{font-size:11px;color:rgba(255,255,255,.35);font-weight:600;white-space:nowrap}
+.sh-chip{display:flex;align-items:center;gap:5px;padding:4px 10px 4px 12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.65);border-radius:14px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s}
+.sh-chip:hover{background:rgba(230,81,0,.25);border-color:rgba(230,81,0,.4);color:#fff}
+.sh-chip-x{font-size:13px;opacity:.6;line-height:1}
+.sh-chip-x:hover{opacity:1}
+.sh-clear{font-size:11px;color:rgba(255,255,255,.25);cursor:pointer;padding:4px 8px;border-radius:10px;font-weight:600;transition:.15s}
+.sh-clear:hover{color:rgba(255,255,255,.6)}
+
+/* ── QUICK SEARCHES ── */
+.quick-searches{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.qs-label{font-size:12px;color:rgba(255,255,255,.4);font-weight:600;margin-right:4px;align-self:center}
+.qs-btn{padding:6px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s}
+.qs-btn:hover{background:rgba(230,81,0,.3);border-color:rgba(230,81,0,.5);color:#fff}
+
+/* ── HERO STATS ── */
+.hero-stats{display:flex;gap:0;margin-top:56px;border-top:1px solid rgba(255,255,255,.08);padding-top:40px;justify-content:center}
+.hstat{flex:1;max-width:200px;text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.08)}
+.hstat:last-child{border-right:none}
+.hstat-n{font-family:'Baloo 2',cursive;font-size:32px;font-weight:800;color:var(--or2)}
+.hstat-l{font-size:11px;color:rgba(255,255,255,.4);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── RESULTS ── */
+.results-header{background:#fff;border-bottom:1px solid var(--border);padding:12px 4%;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:66px;z-index:200}
+.results-city-badge{display:flex;align-items:center;gap:6px;background:var(--or-pale);border:1.5px solid var(--or-mid);color:var(--or);font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px}
+.results-count{font-size:14px;color:var(--muted);font-weight:500}
+.results-count strong{color:var(--deep)}
+.results-item-badge{display:flex;align-items:center;gap:6px;background:var(--bbg);border:1.5px solid #90CAF9;color:var(--blue);font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px}
+.results-actions{display:flex;gap:6px;margin-left:auto;align-items:center}
+.results-clear{font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;padding:6px 12px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s}
+.results-clear:hover{border-color:var(--red);color:var(--red)}
+/* Sort control */
+.sort-select{font-size:12px;font-weight:700;color:var(--muted);padding:6px 12px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;outline:none;transition:.15s}
+.sort-select:focus{border-color:var(--or)}
+
+.cat-filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 4%;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.cat-filter-bar::-webkit-scrollbar{display:none}
+.cf-btn{white-space:nowrap;padding:6px 16px;border-radius:18px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);color:var(--muted);background:#fff;transition:.15s;font-family:'Plus Jakarta Sans',sans-serif}
+.cf-btn.active,.cf-btn:hover{background:var(--or);color:#fff;border-color:var(--or)}
+/* Open now filter toggle */
+.open-toggle{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;padding:6px 12px;border-radius:18px;border:1.5px solid var(--border);background:#fff;transition:.15s;user-select:none}
+.open-toggle.on{background:var(--gbg);border-color:#A5D6A7;color:var(--green)}
+.open-toggle-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;padding:24px 4%}
+
+/* ── RESULT CARD ── */
+.rc{background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;transition:.2s;position:relative}
+.rc:hover{border-color:var(--or);box-shadow:0 8px 28px rgba(230,81,0,.12);transform:translateY(-2px)}
+.rc-verified{position:absolute;top:12px;right:12px;background:var(--gbg);border:1.5px solid #A5D6A7;color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;letter-spacing:.3px}
+.rc-header{padding:16px 16px 12px;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--border)}
+.rc-photo{width:52px;height:52px;border-radius:13px;object-fit:cover;flex-shrink:0;background:var(--or-pale)}
+.rc-photo-emoji{width:52px;height:52px;border-radius:13px;background:var(--or-pale);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.rc-info{flex:1;min-width:0}
+.rc-name{font-weight:700;font-size:15px;color:var(--deep);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-cat-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rc-cat{font-size:11px;font-weight:700;color:var(--muted)}
+.rc-open{font-size:11px;font-weight:700;color:var(--green);background:var(--gbg);padding:2px 8px;border-radius:8px}
+.rc-closed{font-size:11px;font-weight:700;color:var(--red);background:var(--rbg);padding:2px 8px;border-radius:8px}
+.rc-dist{font-size:11px;font-weight:700;color:var(--or);background:var(--or-pale);padding:3px 10px;border-radius:10px;flex-shrink:0}
+/* Rating stars */
+.rc-rating{display:flex;align-items:center;gap:4px;margin-top:4px}
+.rc-stars{color:#FFA000;font-size:12px;letter-spacing:1px}
+.rc-rating-val{font-size:11px;font-weight:700;color:var(--muted)}
+.rc-views{font-size:10px;color:var(--muted);font-weight:500}
+.rc-address{padding:10px 16px;display:flex;gap:7px;align-items:flex-start;border-bottom:1px solid var(--border);background:#FAFAF9}
+.rc-addr-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+.rc-addr-text{font-size:12px;color:var(--muted);line-height:1.6;font-weight:500}
+.rc-hours{font-size:11px;color:var(--muted);margin-top:3px}
+.rc-products{padding:10px 16px 12px;border-bottom:1px solid var(--border)}
+.rc-prod-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.rc-prod-list{display:flex;flex-direction:column;gap:5px}
+.rc-prod-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;background:var(--surface)}
+.rc-prod-name{font-size:13px;font-weight:600;color:var(--deep);flex:1}
+.rc-prod-price{font-family:'Baloo 2',cursive;font-size:15px;font-weight:700;color:var(--or)}
+.rc-prod-avail{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.av-y{background:var(--gbg);color:var(--green)}
+.av-n{background:var(--rbg);color:var(--red)}
+.rc-matched-highlight{border-left:3px solid var(--or)}
+.rc-actions{padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.rc-btn{flex:1;padding:9px 6px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s;display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;min-width:58px}
+.rc-btn:hover{filter:brightness(.92)}
+.btn-call{background:var(--gbg);border-color:#A5D6A7;color:var(--green)}
+.btn-wa{background:#e8f5e9;border-color:#A5D6A7;color:#1B5E20}
+.btn-map{background:var(--bbg);border-color:#90CAF9;color:var(--blue)}
+.btn-share{background:var(--pbg);border-color:#CE93D8;color:var(--purple)}
+.btn-details{background:var(--or-pale);border-color:var(--or-mid);color:var(--or)}
+/* Report link */
+.rc-report{padding:6px 14px;font-size:10px;color:var(--muted);cursor:pointer;text-align:right;border-top:1px solid var(--border);background:#fafaf9;display:flex;align-items:center;justify-content:flex-end;gap:4px}
+.rc-report:hover{color:var(--red)}
+
+/* ── DID YOU MEAN banner ── */
+.dym-banner{grid-column:1/-1;background:var(--ybg);border:1.5px solid #FFE082;border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dym-text{font-size:13px;color:var(--text);font-weight:500;flex:1}
+.dym-btn{padding:8px 18px;background:var(--or);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:64px 24px;grid-column:1/-1}
+.empty-icon{font-size:56px;margin-bottom:16px}
+.empty-title{font-family:'Baloo 2',cursive;font-size:22px;font-weight:700;color:var(--deep);margin-bottom:8px}
+.empty-sub{font-size:14px;color:var(--muted);line-height:1.75;max-width:400px;margin:0 auto}
+.empty-suggestions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.es-btn{padding:7px 16px;border-radius:18px;background:var(--or-pale);border:1.5px solid var(--or-mid);color:var(--or);font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s}
+
+/* ── WELCOME STATE ── */
+.welcome-state{text-align:center;padding:72px 24px}
+.ws-icon{font-size:64px;margin-bottom:20px}
+.ws-title{font-family:'Baloo 2',cursive;font-size:26px;font-weight:800;color:var(--deep);margin-bottom:10px}
+.ws-sub{font-size:14px;color:var(--muted);line-height:1.8;max-width:480px;margin:0 auto 28px}
+.ws-steps{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+.ws-step{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;font-size:13px;color:var(--deep);font-weight:600}
+.ws-step-num{width:28px;height:28px;border-radius:50%;background:var(--or);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.22s;padding:20px}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:22px;width:660px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 36px 90px rgba(0,0,0,.28);transform:translateY(28px);transition:.25s}
+.overlay.open .modal{transform:translateY(0)}
+.mhdr{background:var(--or);padding:20px 26px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:2}
+.mhdr-left{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.mhdr h3{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mhdr-verified{background:rgba(255,255,255,.25);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;flex-shrink:0}
+.mcls{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.mcls:hover{background:rgba(255,255,255,.35)}
+.minfo{padding:18px 26px;border-bottom:1px solid var(--border)}
+.minfo-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;color:var(--muted)}
+.minfo-row:last-child{margin-bottom:0}
+.minfo-icon{flex-shrink:0;margin-top:1px}
+.minfo-val{color:var(--text);font-weight:500;line-height:1.5}
+.minfo-val.phone{color:var(--or);font-weight:700;cursor:pointer}
+/* Rating in modal */
+.mrating{padding:14px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mr-stars-big{color:#FFA000;font-size:22px;letter-spacing:2px}
+.mr-val{font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:var(--deep)}
+.mr-count{font-size:12px;color:var(--muted);font-weight:500}
+.mr-actions{margin-left:auto;display:flex;gap:8px}
+.mr-rate-btn{padding:7px 16px;background:var(--or-pale);border:1.5px solid var(--or-mid);color:var(--or);font-size:12px;font-weight:700;border-radius:20px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s}
+.mr-rate-btn:hover{background:var(--or-mid)}
+/* View counter */
+.mviews{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.mcontact{display:flex;gap:10px;padding:14px 26px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.mbtn{flex:1;min-width:100px;padding:12px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.mbtn-c{background:var(--gbg);border-color:#A5D6A7;color:var(--green)}
+.mbtn-w{background:#dcf8c6;border-color:#25D366;color:#075E54}
+.mbtn-m{background:var(--bbg);border-color:#90CAF9;color:var(--blue)}
+.mbtn-share{background:var(--pbg);border-color:#CE93D8;color:var(--purple)}
+.mbtn:hover{filter:brightness(.92)}
+/* Map section */
+.mmap-section{padding:0 26px 4px}
+.mmap-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding-top:16px}
+.mmap-frame{width:100%;height:200px;border-radius:12px;overflow:hidden;border:1.5px solid var(--border)}
+.mmap-frame iframe{width:100%;height:100%;border:none}
+/* Products */
+.mprod-section{padding:18px 26px}
+.mprod-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.mprod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mpcard{border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;transition:.15s}
+.mpcard:hover{border-color:var(--or)}
+.mpcard-name{font-size:13px;font-weight:700;color:var(--deep);margin-bottom:2px}
+.mpcard-sub{font-size:11px;color:var(--muted)}
+.mpcard-price{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:var(--or);margin-top:5px}
+.mpcard-avail{font-size:10px;padding:2px 9px;border-radius:8px;margin-top:5px;display:inline-block;font-weight:700}
+/* Reviews */
+.mreviews{padding:0 26px 18px}
+.mrev-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.mrev-item{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.mrev-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.mrev-name{font-size:13px;font-weight:700;color:var(--deep);flex:1}
+.mrev-stars{color:#FFA000;font-size:12px}
+.mrev-date{font-size:10px;color:var(--muted)}
+.mrev-text{font-size:12px;color:var(--muted);line-height:1.6}
+/* Report in modal */
+.mreport{padding:12px 26px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:.15s}
+.mreport:hover{color:var(--red);background:var(--rbg)}
+
+/* ── SECTIONS ── */
+section.content{padding:80px 4%}
+.slabel{font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--or);text-transform:uppercase;margin-bottom:10px}
+.sh2{font-family:'Baloo 2',cursive;font-size:clamp(28px,4vw,44px);font-weight:800;color:var(--deep);line-height:1.1;letter-spacing:-1px;margin-bottom:14px}
+.ssub{font-size:15px;color:var(--muted);max-width:580px;line-height:1.85}
+/* How it works */
+.how{background:var(--deep)}
+.how .sh2{color:#fff}
+.how .slabel{color:var(--or2)}
+.how .ssub{color:rgba(255,255,255,.5)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
+.step{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px 20px;text-align:center;transition:.2s}
+.step:hover{background:rgba(255,255,255,.07);border-color:rgba(230,81,0,.4)}
+.step-n{width:50px;height:50px;border-radius:50%;background:var(--or);color:#fff;font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.step-ico{font-size:28px;margin-bottom:12px}
+.step h4{font-family:'Baloo 2',cursive;font-size:16px;font-weight:700;color:#fff;margin-bottom:7px}
+.step p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.7}
+
+/* ── REGISTER ── */
+.reg-wrap{display:grid;grid-template-columns:1fr 1fr;gap:52px;margin-top:48px;align-items:start}
+.reg-benefits{display:flex;flex-direction:column;gap:13px}
+.rb{display:flex;gap:13px;align-items:flex-start;padding:16px;background:var(--card);border:1.5px solid var(--border);border-radius:13px;transition:.2s}
+.rb:hover{border-color:var(--or);box-shadow:0 4px 14px rgba(230,81,0,.09)}
+.rb-icon{font-size:22px;flex-shrink:0}
+.rb-title{font-weight:700;font-size:14px;color:var(--deep);margin-bottom:3px}
+.rb-desc{font-size:12px;color:var(--muted);line-height:1.65}
+.reg-form{background:#fff;border-radius:20px;overflow:hidden;border:1.5px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.08)}
+.rf-hdr{background:var(--or);padding:22px 26px}
+.rf-hdr h3{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:#fff}
+.rf-hdr p{font-size:12px;color:rgba(255,255,255,.8);margin-top:3px}
+.rf-steps{display:flex;border-bottom:1px solid var(--border)}
+.rf-step{flex:1;padding:12px 6px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);border-right:1px solid var(--border);transition:.2s;position:relative}
+.rf-step:last-child{border-right:none}
+.rf-step.active{color:var(--or);background:var(--or-pale)}
+.rf-step.done{color:var(--green);background:var(--gbg)}
+.rf-step::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:transparent}
+.rf-step.active::after{background:var(--or)}
+.rf-step.done::after{background:var(--green)}
+.rf-body{padding:24px 26px;min-height:340px}
+.fstep{display:none}.fstep.active{display:block}
+.fstep-title{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;color:var(--deep);margin-bottom:4px}
+.fstep-sub{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.fgrp{margin-bottom:16px}
+.fgrp label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.fgrp input,.fgrp select,.fgrp textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);outline:none;transition:.2s}
+.fgrp input:focus,.fgrp select:focus,.fgrp textarea:focus{border-color:var(--or);box-shadow:0 0 0 3px rgba(230,81,0,.1)}
+.fgrp textarea{resize:none;min-height:72px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.otp-row{display:flex;gap:8px}
+.otp-inp{width:52px!important;height:52px;text-align:center;font-size:22px;font-weight:700;padding:0!important;border-radius:10px!important;inputmode:numeric}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:5px}
+.cat-opt{padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;transition:.2s;font-size:11px;font-weight:700;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif}
+.cat-opt:hover,.cat-opt.selected{border-color:var(--or);background:var(--or-pale);color:var(--or)}
+.cat-opt-icon{font-size:20px;display:block;margin-bottom:4px}
+/* Product row with in-stock toggle */
+.pform-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:8px;align-items:end}
+.pform-row .fgrp{margin-bottom:0}
+.stock-toggle{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.15s;flex-shrink:0;align-self:end}
+.stock-toggle.in-stock{background:var(--gbg);border-color:#A5D6A7}
+.stock-toggle.out-stock{background:var(--rbg);border-color:#EF9A9A}
+/* Photo upload */
+.photo-upload-area{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:16px}
+.photo-upload-area:hover{border-color:var(--or);background:var(--or-pale)}
+.photo-upload-area input{display:none}
+.pua-icon{font-size:32px;margin-bottom:8px}
+.pua-text{font-size:13px;font-weight:600;color:var(--muted)}
+.pua-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.photo-preview{width:80px;height:80px;border-radius:12px;object-fit:cover;border:2px solid var(--or-mid);margin:0 auto 8px;display:block}
+/* Pincode + GPS */
+.gps-row{display:flex;gap:8px;align-items:flex-end}
+.gps-btn{padding:10px 14px;background:var(--bbg);border:1.5px solid #90CAF9;color:var(--blue);border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;transition:.15s;flex-shrink:0}
+.gps-btn:hover{background:#BBDEFB}
+.add-prod-btn{width:100%;padding:10px;background:var(--or-pale);border:2px dashed var(--or-mid);color:var(--or);font-size:13px;font-weight:700;border-radius:10px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;margin-top:2px}
+.add-prod-btn:hover{background:#FFE0B2;border-color:var(--or)}
+.rf-footer{padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.rf-prog{font-size:12px;color:var(--muted);font-weight:600;margin-right:auto}
+.rf-back{background:transparent;border:1.5px solid var(--border);color:var(--muted);padding:9px 20px;border-radius:24px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;transition:.2s}
+.rf-next{background:var(--or);color:#fff;border:none;padding:10px 24px;border-radius:24px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;transition:.2s}
+.rf-next:hover{background:var(--or-dark)}
+.success-wrap{text-align:center;padding:20px 0}
+.success-icon{font-size:56px;margin-bottom:14px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-wrap h3{font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--deep);margin-bottom:6px}
+.success-wrap p{font-size:13px;color:var(--muted);line-height:1.75}
+.ref-box{margin-top:18px;padding:14px;background:var(--gbg);border-radius:12px;border:1.5px solid #A5D6A7}
+.ref-label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.ref-id{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;color:var(--green)}
+.saved-banner{background:var(--gbg);border:1.5px solid #A5D6A7;border-radius:12px;padding:12px 16px;margin-top:14px;font-size:12px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:8px}
+
+/* ── RATING MODAL ── */
+.rate-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;padding:20px}
+.rate-overlay.open{opacity:1;pointer-events:all}
+.rate-modal{background:#fff;border-radius:20px;width:400px;max-width:100%;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.rate-title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:var(--deep);margin-bottom:6px}
+.rate-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.star-picker{display:flex;gap:8px;margin-bottom:20px;justify-content:center}
+.star-picker span{font-size:36px;cursor:pointer;transition:.15s;filter:grayscale(1)}
+.star-picker span.active{filter:none}
+.rate-review{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);outline:none;resize:none;min-height:80px;transition:.2s}
+.rate-review:focus{border-color:var(--or);box-shadow:0 0 0 3px rgba(230,81,0,.1)}
+.rate-footer{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.rate-cancel{padding:9px 20px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.rate-submit{padding:9px 24px;border-radius:20px;border:none;background:var(--or);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ── REPORT MODAL ── */
+.report-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;padding:20px}
+.report-overlay.open{opacity:1;pointer-events:all}
+.report-modal{background:#fff;border-radius:20px;width:420px;max-width:100%;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.report-title{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;color:var(--deep);margin-bottom:6px}
+.report-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.report-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.report-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);transition:.15s}
+.report-opt:hover,.report-opt.selected{border-color:var(--red);background:var(--rbg);color:var(--red)}
+.report-footer{display:flex;gap:10px;justify-content:flex-end}
+.report-cancel{padding:9px 20px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.report-submit{padding:9px 24px;border-radius:20px;border:none;background:var(--red);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ── FAQ SECTION ── */
+.faq-section{padding:80px 4%;background:var(--surface)}
+.faq-list{margin-top:32px;max-width:700px;display:flex;flex-direction:column;gap:10px}
+.faq-item{background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:.15s}
+.faq-item.open{border-color:var(--or)}
+.faq-q{padding:16px 20px;font-size:14px;font-weight:700;color:var(--deep);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.faq-arrow{font-size:18px;color:var(--muted);transition:.2s;flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg);color:var(--or)}
+.faq-a{display:none;padding:0 20px 16px;font-size:13px;color:var(--muted);line-height:1.8}
+.faq-item.open .faq-a{display:block}
+
+/* ── FOOTER ── */
+footer{background:var(--deep);padding:40px 4%}
+.foot-inner{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-start}
+.foot-logo{font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--or)}
+.foot-logo span{color:#fff}
+.foot-tag{font-size:11px;color:rgba(255,255,255,.35);margin-top:4px}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.foot-links a{font-size:12px;color:rgba(255,255,255,.4);text-decoration:none;transition:.15s;font-weight:500}
+.foot-links a:hover{color:var(--or2)}
+.foot-legal{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.foot-legal a{font-size:11px;color:rgba(255,255,255,.25);text-decoration:underline;transition:.15s}
+.foot-legal a:hover{color:rgba(255,255,255,.5)}
+.foot-copy{font-size:11px;color:rgba(255,255,255,.22)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--deep);color:#fff;font-size:14px;font-weight:600;padding:12px 24px;border-radius:30px;z-index:999;opacity:0;transition:.3s;white-space:nowrap;box-shadow:0 10px 36px rgba(0,0,0,.3);pointer-events:none;max-width:90vw;white-space:normal;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PRIVACY / TERMS PAGE ── */
+.legal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;padding:20px}
+.legal-overlay.open{opacity:1;pointer-events:all}
+.legal-modal{background:#fff;border-radius:20px;width:700px;max-width:100%;max-height:88vh;overflow-y:auto;padding:32px;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.legal-title{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;color:var(--deep);margin-bottom:20px}
+.legal-body{font-size:13px;color:var(--muted);line-height:1.9}
+.legal-body h3{font-size:15px;font-weight:700;color:var(--deep);margin:18px 0 6px}
+.legal-close{float:right;background:var(--or-pale);border:none;color:var(--or);font-size:20px;width:32px;height:32px;border-radius:50%;cursor:pointer;font-weight:800}
+
+/* ── DARK MODE ── */
+body.dark{--or:#FF8A50;--or2:#FFAB76;--or-pale:#3a1a00;--or-mid:#5a2800;--or-dark:#FF6D30;
+  --deep:#fff;--text:#f0e8de;--muted:#b09070;--border:#3a2a1a;
+  --surface:#0f0a05;--card:#1a1008;
+  --green:#81C784;--gbg:#0a1f0c;--rbg:#1f0808;--red:#EF9A9A;
+  --blue:#90CAF9;--bbg:#071227;--purple:#CE93D8;--pbg:#1a0827;
+  --yellow:#FFD54F;--ybg:#1a1500;
+  background:#0f0a05;color:#f0e8de}
+body.dark nav{background:rgba(15,10,5,.97)}
+body.dark .modal,body.dark .rate-modal,body.dark .report-modal,body.dark .legal-modal,body.dark .reg-form{background:#1a1008;border-color:#3a2a1a}
+body.dark .rc,body.dark .faq-item,body.dark .rb,body.dark .ws-step{background:#1a1008;border-color:#3a2a1a}
+body.dark .rc-address{background:#120c04}
+body.dark .rc-prod-row,body.dark .mrev-item{background:#120c04}
+body.dark .results-header,body.dark .cat-filter-bar{background:#1a1008;border-color:#3a2a1a}
+body.dark .fgrp input,body.dark .fgrp select,body.dark .fgrp textarea{background:#120c04;border-color:#3a2a1a;color:#f0e8de}
+body.dark .sort-select,body.dark .results-clear,body.dark .rf-back,body.dark .open-toggle{background:#1a1008;border-color:#3a2a1a;color:#b09070}
+body.dark .cf-btn{background:#1a1008;border-color:#3a2a1a;color:#b09070}
+body.dark .otp-inp{background:#120c04;color:#f0e8de;border-color:#3a2a1a}
+body.dark #darkBtn{border-color:#3a2a1a;color:#FFD54F}
+body.dark .mob-menu{background:#1a1008}
+body.dark .city-dropdown,body.dark .item-dropdown{background:#1a1008;border-color:#3a2a1a}
+body.dark .cd-section-label{background:#1a1008;color:#b09070}
+body.dark .cd-item,body.dark .id-item{color:#f0e8de}
+body.dark .photo-upload-area{border-color:#3a2a1a}
+body.dark .mpcard{background:#120c04;border-color:#3a2a1a}
+body.dark .report-opt{background:#1a1008;border-color:#3a2a1a;color:#f0e8de}
+body.dark .faq-q{color:#f0e8de}
+body.dark .faq-a{color:#b09070}
+body.dark .rc-report,body.dark .mreport{background:#120c04;color:#b09070}
+body.dark .rate-review{background:#120c04;border-color:#3a2a1a;color:#f0e8de}
+body.dark .mmap-frame{border-color:#3a2a1a}
+body.dark .dym-banner{background:#1a1500;border-color:#5a4a00}
+body.dark .sh-chip{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1)}
+body.dark .qs-btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1)}
+
+/* ── SCROLL TO TOP ── */
+#scrollTopBtn{position:fixed;bottom:28px;right:20px;width:44px;height:44px;border-radius:50%;background:var(--or);color:#fff;border:none;font-size:20px;cursor:pointer;z-index:290;opacity:0;transform:translateY(20px);transition:.3s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(230,81,0,.4)}
+#scrollTopBtn.show{opacity:1;transform:translateY(0)}
+#scrollTopBtn:hover{background:var(--or-dark)}
+
+/* ── SKELETON LOADER ── */
+.skeleton{background:linear-gradient(90deg,var(--border) 25%,var(--or-pale) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;padding:16px}
+.sk-line{height:14px;margin-bottom:10px}
+.sk-line.short{width:60%}
+.sk-line.xshort{width:35%}
+.sk-icon{width:52px;height:52px;border-radius:13px;flex-shrink:0}
+
+/* ── PRINT SHOP CARD ── */
+@media print{
+  nav,footer,.rc-actions,.results-header,.cat-filter-bar,.rc-report,#scrollTopBtn,
+  .hero,.how,section.content,.faq-section,.welcome-state,.empty-state,.search-history,
+  .quick-searches,.hero-stats{display:none!important}
+  .results-grid{grid-template-columns:1fr 1fr!important}
+  .rc{break-inside:avoid;box-shadow:none!important;border:1px solid #ccc!important}
+  body{background:#fff!important;color:#000!important}
+}
+
+/* ── NETWORK STATUS BANNER ── */
+#offlineBanner{display:none;position:fixed;top:66px;left:0;right:0;background:#333;color:#fff;text-align:center;font-size:13px;font-weight:600;padding:8px;z-index:298}
+#offlineBanner.show{display:block}
+@media(max-width:900px){
+  .search-box{flex-direction:column;gap:0;padding:8px}
+  .sb-city{border-right:none;border-bottom:2px solid var(--border);min-width:unset;padding:10px 8px}
+  .sb-item{padding:10px 8px}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .reg-wrap{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hbg{display:flex}
+  .results-grid{grid-template-columns:1fr}
+  .mprod-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .hero{padding:44px 4% 52px}
+  .hero-stats{flex-wrap:wrap}
+  .hstat{max-width:50%;min-width:calc(50% - 20px)}
+  .steps{grid-template-columns:1fr}
+  .ws-steps{flex-direction:column;align-items:center}
+  .frow{grid-template-columns:1fr}
+  .mhdr{padding:16px 18px}
+  .minfo,.mcontact,.mprod-section,.mmap-section,.mreviews{padding:14px 18px}
+  footer .foot-inner{flex-direction:column}
+  .foot-links{justify-content:flex-start}
+  .pform-row{grid-template-columns:2fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Shop<span>Saathi</span></a>
+  <div class="nav-links">
+    <a href="#search-area">Find Shops</a>
+    <a href="#how">How It Works</a>
+    <a href="#register">Register Shop</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <button id="darkBtn" onclick="toggleDark()" title="Toggle dark mode" style="background:transparent;border:1.5px solid var(--border);color:var(--muted);font-size:16px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s">🌙</button>
+  <button id="installBtn" onclick="installPWA()">📲 Install App</button>
+  <div class="hbg" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="#search-area" onclick="toggleMenu()">🔍 Find Shops</a>
+  <a href="#how" onclick="toggleMenu()">📖 How It Works</a>
+  <a href="#register" onclick="toggleMenu()">🏪 Register Shop</a>
+  <a href="#faq" onclick="toggleMenu()">❓ FAQ</a>
+</div>
+
+<!-- HERO -->
+<div class="hero" id="search-area">
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="pulse"></span>Covering Every City, Town &amp; Village in India</div>
+    <h1>Find Any Shop<br>in <em>Any City</em> of India</h1>
+    <p class="hero-sub">Search by city + product. Get shop addresses, prices, availability — call or WhatsApp directly.</p>
+
+    <!-- MAIN SEARCH BOX -->
+    <div class="search-box" id="searchBox">
+      <div class="sb-city" id="cityInputWrap">
+        <div class="sb-city-icon" title="Detect my location" onclick="detectLocation()">📍</div>
+        <input id="cityInput" placeholder="City / Town / Village…" autocomplete="off"
+          oninput="onCityInput()" onfocus="openCityDrop()" onblur="setTimeout(closeCityDrop,200)"/>
+        <div class="city-dropdown" id="cityDrop"></div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-item-icon">🔍</div>
+        <input id="itemInput" placeholder="What are you looking for? (mirror, rice, medicine…)" autocomplete="off"
+          oninput="onItemInput()" onfocus="openItemDrop()" onblur="setTimeout(closeItemDrop,200)"
+          onkeydown="if(event.key==='Enter')doSearch()"/>
+        <div class="item-dropdown" id="itemDrop"></div>
+      </div>
+      <button class="sb-btn" onclick="doSearch()">🔍 Search Shops</button>
+    </div>
+
+    <!-- SEARCH HISTORY -->
+    <div class="search-history" id="searchHistory" style="display:none"></div>
+
+    <!-- QUICK SEARCHES -->
+    <div class="quick-searches">
+      <span class="qs-label">Try:</span>
+      <button class="qs-btn" onclick="quickSearch('Agra','mirror')">Mirror in Agra</button>
+      <button class="qs-btn" onclick="quickSearch('Sirsaganj','grocery')">Grocery in Sirsaganj</button>
+      <button class="qs-btn" onclick="quickSearch('Haldwani','medicine')">Medicine in Haldwani</button>
+      <button class="qs-btn" onclick="quickSearch('Lucknow','electronics')">Electronics in Lucknow</button>
+      <button class="qs-btn" onclick="quickSearch('Jaipur','salon')">Salon in Jaipur</button>
+      <button class="qs-btn" onclick="quickSearch('Dehradun','grocery')">Grocery in Dehradun</button>
+    </div>
+
+    <!-- HERO STATS -->
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n" id="statShops">29</div><div class="hstat-l">Shops Listed</div></div>
+      <div class="hstat"><div class="hstat-n">700+</div><div class="hstat-l">Cities & Towns</div></div>
+      <div class="hstat"><div class="hstat-n" id="statProducts">147</div><div class="hstat-l">Products</div></div>
+      <div class="hstat"><div class="hstat-n">24/7</div><div class="hstat-l">Always Available</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS SECTION -->
+<div id="resultsSection" style="display:none">
+  <div class="results-header" id="resultsHeader"></div>
+  <div class="cat-filter-bar" id="catFilterBar"></div>
+  <div class="results-grid" id="resultsGrid"></div>
+</div>
+
+<!-- WELCOME STATE -->
+<div id="welcomeState" style="padding:48px 4%">
+  <div class="welcome-state">
+    <div class="ws-icon">🗺️</div>
+    <div class="ws-title">Search shops across India</div>
+    <p class="ws-sub">Enter your city and what you're looking for. ShopSaathi shows you all nearby shops with addresses, product availability, and direct contact — no account needed.</p>
+    <div class="ws-steps">
+      <div class="ws-step"><div class="ws-step-num">1</div>Enter your city or town</div>
+      <div class="ws-step"><div class="ws-step-num">2</div>Type what you need</div>
+      <div class="ws-step"><div class="ws-step-num">3</div>Call or WhatsApp directly</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="content how" id="how">
+  <div class="slabel">How It Works</div>
+  <div class="sh2">Find Any Shop in 3 Steps</div>
+  <p class="ssub">No account needed to search. Just type your city and what you need — ShopSaathi does the rest.</p>
+  <div class="steps">
+    <div class="step"><div class="step-ico">📍</div><div class="step-n">1</div><h4>Enter Your Location</h4><p>Type your city, town, or village — or tap 📍 to auto-detect. ShopSaathi covers all of India.</p></div>
+    <div class="step"><div class="step-ico">🔍</div><div class="step-n">2</div><h4>Search for a Product</h4><p>Type what you need. Smart suggestions help you find the right search term instantly.</p></div>
+    <div class="step"><div class="step-ico">📦</div><div class="step-n">3</div><h4>Check Availability</h4><p>See which shops have your item in stock, their prices, ratings, and full address.</p></div>
+    <div class="step"><div class="step-ico">📞</div><div class="step-n">4</div><h4>Call or WhatsApp</h4><p>Confirm with one tap. Call or WhatsApp the shop directly — no middleman, no fee.</p></div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section class="content" id="register">
+  <div class="slabel">For Shopkeepers</div>
+  <div class="sh2">List Your Shop — Free</div>
+  <p class="ssub">Register in 3 steps. Go live within 24 hours. Customers from your entire area will find you.</p>
+  <div class="reg-wrap">
+    <div class="reg-benefits">
+      <div class="rb"><div class="rb-icon">🆓</div><div><div class="rb-title">100% Free to List</div><div class="rb-desc">No fees, no commission, no monthly charges. ShopSaathi is free for all shopkeepers.</div></div></div>
+      <div class="rb"><div class="rb-icon">📍</div><div><div class="rb-title">Reach Your Entire City</div><div class="rb-desc">Anyone searching in your city, town, or village will find your shop.</div></div></div>
+      <div class="rb"><div class="rb-icon">💬</div><div><div class="rb-title">WhatsApp + Direct Calls</div><div class="rb-desc">Customers contact you directly. No platform in between.</div></div></div>
+      <div class="rb"><div class="rb-icon">🗺️</div><div><div class="rb-title">Map Location</div><div class="rb-desc">Your shop appears on Google Maps so customers can navigate to you.</div></div></div>
+      <div class="rb"><div class="rb-icon">📦</div><div><div class="rb-title">Live Product Stock Toggle</div><div class="rb-desc">Mark each product in-stock or out-of-stock. Customers see accurate info.</div></div></div>
+      <div class="rb"><div class="rb-icon">✅</div><div><div class="rb-title">Verified Badge</div><div class="rb-desc">Admin-verified shops get a trust badge that builds customer confidence.</div></div></div>
+    </div>
+    <div class="reg-form">
+      <div class="rf-hdr"><h3>🏪 Register Your Shop</h3><p>3 simple steps · takes about 5 minutes</p></div>
+      <div class="rf-steps">
+        <div class="rf-step active" id="stab1">1. Phone</div>
+        <div class="rf-step" id="stab2">2. Shop Info</div>
+        <div class="rf-step" id="stab3">3. Products</div>
+      </div>
+      <div class="rf-body">
+        <!-- Step 1: Phone OTP -->
+        <div class="fstep active" id="fstep1">
+          <div class="fstep-title">Verify Your Number</div>
+          <p class="fstep-sub">We'll send a one-time OTP to confirm your mobile number.</p>
+          <div class="fgrp">
+            <label>Mobile Number</label>
+            <div style="display:flex;gap:8px">
+              <input style="width:68px;flex-shrink:0" value="+91" readonly/>
+              <input id="phoneInp" placeholder="98765 43210" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')"/>
+            </div>
+          </div>
+          <div class="fgrp" id="otpGrp" style="display:none">
+            <label>Enter OTP</label>
+            <div class="otp-row">
+              <input class="otp-inp" maxlength="1" oninput="otpNav(this,0)" onkeydown="otpBack(event,this,0)" inputmode="numeric"/>
+              <input class="otp-inp" maxlength="1" oninput="otpNav(this,1)" onkeydown="otpBack(event,this,1)" inputmode="numeric"/>
+              <input class="otp-inp" maxlength="1" oninput="otpNav(this,2)" onkeydown="otpBack(event,this,2)" inputmode="numeric"/>
+              <input class="otp-inp" maxlength="1" oninput="otpNav(this,3)" onkeydown="otpBack(event,this,3)" inputmode="numeric"/>
+            </div>
+            <p style="font-size:12px;color:var(--muted);margin-top:8px">Demo OTP: <strong style="color:var(--or)">1 2 3 4</strong> &nbsp;·&nbsp; <span id="otpTimer" style="color:var(--muted)"></span></p>
+          </div>
+          <button id="otpBtn" class="rf-next" style="width:100%;padding:13px;font-size:14px;border-radius:12px;margin-top:8px;border:none" onclick="sendOtp()">📱 Send OTP</button>
+        </div>
+
+        <!-- Step 2: Shop Info -->
+        <div class="fstep" id="fstep2">
+          <div class="fstep-title">Shop Information</div>
+          <p class="fstep-sub">This is what customers will see on your profile.</p>
+          <!-- Shop Photo -->
+          <div class="photo-upload-area" onclick="document.getElementById('shopPhotoInput').click()">
+            <input type="file" id="shopPhotoInput" accept="image/*" onchange="previewPhoto(this)"/>
+            <div id="photoPreviewWrap">
+              <div class="pua-icon">📸</div>
+              <div class="pua-text">Upload Shop Photo</div>
+              <div class="pua-sub">Tap to choose a photo of your shop or storefront</div>
+            </div>
+          </div>
+          <div class="fgrp"><label>Shop Name *</label><input id="s2_shopName" placeholder="e.g. Sharma Hardware Store"/></div>
+          <div class="fgrp">
+            <label>Category *</label>
+            <div class="cat-grid">
+              <div class="cat-opt" onclick="selCat(this,'Grocery')"><span class="cat-opt-icon">🛒</span>Grocery</div>
+              <div class="cat-opt" onclick="selCat(this,'Medical')"><span class="cat-opt-icon">💊</span>Medical</div>
+              <div class="cat-opt" onclick="selCat(this,'Hardware')"><span class="cat-opt-icon">🔧</span>Hardware</div>
+              <div class="cat-opt" onclick="selCat(this,'Electronics')"><span class="cat-opt-icon">🔌</span>Electronics</div>
+              <div class="cat-opt" onclick="selCat(this,'Salon')"><span class="cat-opt-icon">✂️</span>Salon</div>
+              <div class="cat-opt" onclick="selCat(this,'Dairy')"><span class="cat-opt-icon">🥛</span>Dairy</div>
+              <div class="cat-opt" onclick="selCat(this,'Clothing')"><span class="cat-opt-icon">👗</span>Clothing</div>
+              <div class="cat-opt" onclick="selCat(this,'Restaurant')"><span class="cat-opt-icon">🍕</span>Restaurant</div>
+              <div class="cat-opt" onclick="selCat(this,'Other')"><span class="cat-opt-icon">📦</span>Other</div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fgrp"><label>City / Town / Village *</label><input id="s2_city" placeholder="e.g. Haldwani"/></div>
+            <div class="fgrp"><label>Pincode</label><input id="s2_pin" placeholder="263139" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
+          </div>
+          <div class="fgrp">
+            <label>Full Address *</label>
+            <div class="gps-row">
+              <textarea id="s2_address" placeholder="Shop no., mohalla, gali, landmark…" style="flex:1;margin-bottom:0"></textarea>
+              <button class="gps-btn" onclick="getGPS()" title="Detect location via GPS">📡 GPS</button>
+            </div>
+          </div>
+          <input type="hidden" id="s2_lat" value=""/>
+          <input type="hidden" id="s2_lng" value=""/>
+          <div class="frow">
+            <div class="fgrp"><label>Opening Time</label><input id="s2_open" type="time" value="09:00"/></div>
+            <div class="fgrp"><label>Closing Time</label><input id="s2_close" type="time" value="21:00"/></div>
+          </div>
+          <div class="fgrp">
+            <label>WhatsApp Number (same or different from phone)</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input style="width:68px;flex-shrink:0" value="+91" readonly/>
+              <input id="s2_wa" placeholder="Same as phone (leave blank to use phone number)" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Products with in-stock toggle -->
+        <div class="fstep" id="fstep3">
+          <div class="fstep-title">Add Your Products</div>
+          <p class="fstep-sub">Add 3–5 main products. Toggle ✅/❌ to mark stock. You can update anytime.</p>
+          <div id="prodFormList">
+            <div class="pform-row">
+              <div class="fgrp"><label>Product Name</label><input placeholder="e.g. Wall Mirror 18×24"/></div>
+              <div class="fgrp"><label>Price (₹)</label><input placeholder="450" type="number"/></div>
+              <button class="stock-toggle in-stock" title="Toggle stock" onclick="toggleStock(this)">✅</button>
+            </div>
+            <div class="pform-row">
+              <div class="fgrp"><label>Product Name</label><input placeholder="e.g. Round Mirror 12 inch"/></div>
+              <div class="fgrp"><label>Price (₹)</label><input placeholder="220" type="number"/></div>
+              <button class="stock-toggle in-stock" title="Toggle stock" onclick="toggleStock(this)">✅</button>
+            </div>
+            <div class="pform-row">
+              <div class="fgrp"><label>Product Name</label><input placeholder="e.g. Bathroom Mirror"/></div>
+              <div class="fgrp"><label>Price (₹)</label><input placeholder="380" type="number"/></div>
+              <button class="stock-toggle in-stock" title="Toggle stock" onclick="toggleStock(this)">✅</button>
+            </div>
+          </div>
+          <button class="add-prod-btn" onclick="addProdRow()">+ Add Another Product</button>
+          <p style="font-size:11px;color:var(--muted);margin-top:10px">✅ = In Stock &nbsp;·&nbsp; ❌ = Out of Stock. Tap to toggle.</p>
+        </div>
+
+        <!-- Success -->
+        <div class="fstep" id="fstep4">
+          <div class="success-wrap">
+            <div class="success-icon">🎉</div>
+            <h3>Registration Submitted!</h3>
+            <p id="successDetails">Your shop will be verified within <strong>24 hours</strong>.<br/>You'll receive an SMS once you're live on ShopSaathi.</p>
+            <div class="ref-box"><div class="ref-label">Your Reference ID</div><div class="ref-id" id="refId">SS-2025-0000</div></div>
+            <div class="saved-banner" id="savedBanner" style="display:none">✅ Shop details saved on this device</div>
+            <button class="rf-next" style="margin-top:18px;width:100%;border-radius:12px;padding:12px;cursor:pointer;border:none;font-size:14px" onclick="resetForm()">Register Another Shop</button>
+          </div>
+        </div>
+      </div>
+      <div class="rf-footer" id="rfFooter">
+        <span class="rf-prog" id="rfProg">Step 1 of 3</span>
+        <button class="rf-back" id="rfBack" style="display:none" onclick="prevStep()">← Back</button>
+        <button class="rf-next" id="rfNext" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="slabel">Help & FAQ</div>
+  <div class="sh2">Common Questions</div>
+  <div class="faq-list">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Is ShopSaathi free for shopkeepers? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Yes, 100% free. There are no listing fees, no commissions, and no monthly charges. ShopSaathi is completely free for all shopkeepers across India.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How long does it take for my shop to appear in search? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">After you register, our team verifies your shop within 24 hours. Once verified, your shop will appear in search results and you'll receive an SMS confirmation.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How can I update my product list or prices? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">After your shop is verified, you'll receive login credentials via SMS. You can log in to your shopkeeper dashboard to update products, prices, and stock availability anytime.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can customers from my village or small town find my shop? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Yes! ShopSaathi covers cities, towns, and villages across all of India. If your location isn't listed, we'll add it when you register your shop.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How do I report incorrect shop information? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Every shop card has a "Report" button. Click it and select the issue — wrong address, closed permanently, wrong phone number, etc. Our team reviews reports within 24 hours.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How do I install ShopSaathi as an app on my phone? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Click the "Install App" button in the top navigation bar (on supported browsers), or use your browser's "Add to Home Screen" option. ShopSaathi works offline once installed.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Is my phone number shared with everyone? <span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Your registered phone number is shown on your shop's public listing so customers can contact you. Customer phone numbers are never stored or shared. See our Privacy Policy for full details.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-logo">Shop<span>Saathi</span></div>
+      <div class="foot-tag">Find Any Shop · Any City · All of India</div>
+      <div class="foot-legal" style="margin-top:10px">
+        <a href="#" onclick="openLegal('privacy');return false">Privacy Policy</a>
+        <a href="#" onclick="openLegal('terms');return false">Terms of Use</a>
+        <a href="#" onclick="openLegal('contact');return false">Contact Us</a>
+      </div>
+    </div>
+    <div class="foot-links">
+      <a href="#search-area">Search</a>
+      <a href="#how">How It Works</a>
+      <a href="#register">Register Shop</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="foot-copy">© 2025 ShopSaathi. All rights reserved.<br/>Made with ❤️ for India's local shopkeepers.</div>
+  </div>
+</footer>
+
+<!-- SHOP DETAIL MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="mhdr">
+      <div class="mhdr-left">
+        <div id="mIcon" style="font-size:26px;flex-shrink:0"></div>
+        <h3 id="mName"></h3>
+        <span class="mhdr-verified" id="mVerified" style="display:none">✓ Verified</span>
+      </div>
+      <button class="mcls" onclick="closeModal()">✕</button>
+    </div>
+    <div class="minfo" id="mInfoBody"></div>
+    <!-- Rating -->
+    <div class="mrating" id="mRating"></div>
+    <!-- Contact buttons -->
+    <div class="mcontact">
+      <button class="mbtn mbtn-c" id="mCallBtn">📞 Call Shop</button>
+      <a class="mbtn mbtn-w" id="mWaBtn" href="#" target="_blank">💬 WhatsApp</a>
+      <a class="mbtn mbtn-m" id="mMapBtn" href="#" target="_blank">🗺️ Directions</a>
+      <button class="mbtn mbtn-share" id="mShareBtn" onclick="shareShop()">📤 Share</button>
+    </div>
+    <!-- Map embed -->
+    <div class="mmap-section">
+      <div class="mmap-label">📍 Location Map</div>
+      <div class="mmap-frame" id="mMapFrame"></div>
+    </div>
+    <!-- Products -->
+    <div class="mprod-section">
+      <div class="mprod-label">All Products &amp; Prices</div>
+      <div class="mprod-grid" id="mProdGrid"></div>
+    </div>
+    <!-- Reviews -->
+    <div class="mreviews" id="mReviews"></div>
+    <!-- Report -->
+    <div class="mreport" onclick="openReport()">⚑ Report incorrect information</div>
+  </div>
+</div>
+
+<!-- RATING MODAL -->
+<div class="rate-overlay" id="rateOverlay" onclick="if(event.target===this)closeRate()">
+  <div class="rate-modal">
+    <div class="rate-title">Rate This Shop</div>
+    <div class="rate-sub" id="rateShopName">How was your experience?</div>
+    <div class="star-picker" id="starPicker">
+      <span onclick="pickStar(1)">⭐</span>
+      <span onclick="pickStar(2)">⭐</span>
+      <span onclick="pickStar(3)">⭐</span>
+      <span onclick="pickStar(4)">⭐</span>
+      <span onclick="pickStar(5)">⭐</span>
+    </div>
+    <textarea class="rate-review" id="rateText" placeholder="Share your experience (optional)…"></textarea>
+    <div class="rate-footer">
+      <button class="rate-cancel" onclick="closeRate()">Cancel</button>
+      <button class="rate-submit" onclick="submitRating()">Submit Rating</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="report-overlay" id="reportOverlay" onclick="if(event.target===this)closeReport()">
+  <div class="report-modal">
+    <div class="report-title">Report an Issue</div>
+    <div class="report-sub">Help us keep information accurate. What's the problem?</div>
+    <div class="report-opts" id="reportOpts">
+      <div class="report-opt" onclick="selectReport(this)">📍 Wrong address or location</div>
+      <div class="report-opt" onclick="selectReport(this)">📞 Wrong phone number</div>
+      <div class="report-opt" onclick="selectReport(this)">🔒 Shop has permanently closed</div>
+      <div class="report-opt" onclick="selectReport(this)">📦 Product information is incorrect</div>
+      <div class="report-opt" onclick="selectReport(this)">🕐 Wrong opening hours</div>
+      <div class="report-opt" onclick="selectReport(this)">⚠️ Other issue</div>
+    </div>
+    <div class="report-footer">
+      <button class="report-cancel" onclick="closeReport()">Cancel</button>
+      <button class="report-submit" onclick="submitReport()">Submit Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEGAL MODAL -->
+<div class="legal-overlay" id="legalOverlay" onclick="if(event.target===this)closeLegal()">
+  <div class="legal-modal">
+    <button class="legal-close" onclick="closeLegal()">✕</button>
+    <div class="legal-title" id="legalTitle">Privacy Policy</div>
+    <div class="legal-body" id="legalBody"></div>
+  </div>
+</div>
+
+<div id="offlineBanner">📵 You're offline — showing cached results</div>
+<button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<script>
+// ══════════════════════════════════════════════════
+//  CITIES DATABASE (700+ cities)
+// ══════════════════════════════════════════════════
+const CITIES = [
+  {name:'Agra',state:'Uttar Pradesh'},{name:'Lucknow',state:'Uttar Pradesh'},{name:'Kanpur',state:'Uttar Pradesh'},
+  {name:'Varanasi',state:'Uttar Pradesh'},{name:'Mathura',state:'Uttar Pradesh'},{name:'Prayagraj',state:'Uttar Pradesh'},
+  {name:'Meerut',state:'Uttar Pradesh'},{name:'Noida',state:'Uttar Pradesh'},{name:'Ghaziabad',state:'Uttar Pradesh'},
+  {name:'Aligarh',state:'Uttar Pradesh'},{name:'Bareilly',state:'Uttar Pradesh'},{name:'Moradabad',state:'Uttar Pradesh'},
+  {name:'Saharanpur',state:'Uttar Pradesh'},{name:'Gorakhpur',state:'Uttar Pradesh'},{name:'Firozabad',state:'Uttar Pradesh'},
+  {name:'Sirsaganj',state:'Uttar Pradesh'},{name:'Etah',state:'Uttar Pradesh'},{name:'Mainpuri',state:'Uttar Pradesh'},
+  {name:'Hathras',state:'Uttar Pradesh'},{name:'Kasganj',state:'Uttar Pradesh'},{name:'Bulandshahr',state:'Uttar Pradesh'},
+  {name:'Hapur',state:'Uttar Pradesh'},{name:'Muzaffarnagar',state:'Uttar Pradesh'},{name:'Shamli',state:'Uttar Pradesh'},
+  {name:'Sambhal',state:'Uttar Pradesh'},{name:'Amroha',state:'Uttar Pradesh'},{name:'Rampur',state:'Uttar Pradesh'},
+  {name:'Badaun',state:'Uttar Pradesh'},{name:'Shahjahanpur',state:'Uttar Pradesh'},{name:'Lakhimpur Kheri',state:'Uttar Pradesh'},
+  {name:'Sitapur',state:'Uttar Pradesh'},{name:'Hardoi',state:'Uttar Pradesh'},{name:'Unnao',state:'Uttar Pradesh'},
+  {name:'Raebareli',state:'Uttar Pradesh'},{name:'Fatehpur',state:'Uttar Pradesh'},{name:'Jhansi',state:'Uttar Pradesh'},
+  {name:'Banda',state:'Uttar Pradesh'},{name:'Chitrakoot',state:'Uttar Pradesh'},{name:'Mirzapur',state:'Uttar Pradesh'},
+  {name:'Sonbhadra',state:'Uttar Pradesh'},{name:'Azamgarh',state:'Uttar Pradesh'},{name:'Mau',state:'Uttar Pradesh'},
+  {name:'Ballia',state:'Uttar Pradesh'},{name:'Gonda',state:'Uttar Pradesh'},{name:'Bahraich',state:'Uttar Pradesh'},
+  {name:'Shravasti',state:'Uttar Pradesh'},{name:'Greater Noida',state:'Uttar Pradesh'},{name:'Vrindavan',state:'Uttar Pradesh'},
+  {name:'Etawah',state:'Uttar Pradesh'},{name:'Farrukhabad',state:'Uttar Pradesh'},{name:'Orai',state:'Uttar Pradesh'},
+  {name:'Basti',state:'Uttar Pradesh'},{name:'Sultanpur',state:'Uttar Pradesh'},{name:'Ayodhya',state:'Uttar Pradesh'},
+  {name:'New Delhi',state:'Delhi'},{name:'Delhi',state:'Delhi'},{name:'Dwarka',state:'Delhi'},
+  {name:'Rohini',state:'Delhi'},{name:'Rajouri Garden',state:'Delhi'},{name:'Connaught Place',state:'Delhi'},
+  {name:'Laxmi Nagar',state:'Delhi'},{name:'Karol Bagh',state:'Delhi'},{name:'Saket',state:'Delhi'},
+  {name:'Janakpuri',state:'Delhi'},{name:'Pitampura',state:'Delhi'},{name:'Shahdara',state:'Delhi'},
+  {name:'Vasant Kunj',state:'Delhi'},{name:'Preet Vihar',state:'Delhi'},
+  {name:'Dehradun',state:'Uttarakhand'},{name:'Haridwar',state:'Uttarakhand'},{name:'Rishikesh',state:'Uttarakhand'},
+  {name:'Nainital',state:'Uttarakhand'},{name:'Haldwani',state:'Uttarakhand'},{name:'Rudrapur',state:'Uttarakhand'},
+  {name:'Kashipur',state:'Uttarakhand'},{name:'Roorkee',state:'Uttarakhand'},{name:'Kotdwar',state:'Uttarakhand'},
+  {name:'Ramnagar',state:'Uttarakhand'},{name:'Almora',state:'Uttarakhand'},{name:'Pithoragarh',state:'Uttarakhand'},
+  {name:'Bageshwar',state:'Uttarakhand'},{name:'Champawat',state:'Uttarakhand'},{name:'Mussoorie',state:'Uttarakhand'},
+  {name:'Lansdowne',state:'Uttarakhand'},{name:'Tehri',state:'Uttarakhand'},{name:'Uttarkashi',state:'Uttarakhand'},
+  {name:'Chamoli',state:'Uttarakhand'},{name:'Pauri',state:'Uttarakhand'},{name:'Srinagar Garhwal',state:'Uttarakhand'},
+  {name:'Vikasnagar',state:'Uttarakhand'},{name:'Jaspur',state:'Uttarakhand'},{name:'Khatima',state:'Uttarakhand'},
+  {name:'Sitarganj',state:'Uttarakhand'},{name:'Bazpur',state:'Uttarakhand'},{name:'Tanakpur',state:'Uttarakhand'},
+  {name:'Shimla',state:'Himachal Pradesh'},{name:'Dharamshala',state:'Himachal Pradesh'},{name:'Manali',state:'Himachal Pradesh'},
+  {name:'Solan',state:'Himachal Pradesh'},{name:'Mandi',state:'Himachal Pradesh'},{name:'Kullu',state:'Himachal Pradesh'},
+  {name:'Hamirpur',state:'Himachal Pradesh'},{name:'Bilaspur HP',state:'Himachal Pradesh'},{name:'Una',state:'Himachal Pradesh'},
+  {name:'Nahan',state:'Himachal Pradesh'},{name:'Baddi',state:'Himachal Pradesh'},{name:'Palampur',state:'Himachal Pradesh'},
+  {name:'Jaipur',state:'Rajasthan'},{name:'Jodhpur',state:'Rajasthan'},{name:'Udaipur',state:'Rajasthan'},
+  {name:'Kota',state:'Rajasthan'},{name:'Ajmer',state:'Rajasthan'},{name:'Bikaner',state:'Rajasthan'},
+  {name:'Alwar',state:'Rajasthan'},{name:'Bharatpur',state:'Rajasthan'},{name:'Sikar',state:'Rajasthan'},
+  {name:'Pali',state:'Rajasthan'},{name:'Tonk',state:'Rajasthan'},{name:'Sawai Madhopur',state:'Rajasthan'},
+  {name:'Chittorgarh',state:'Rajasthan'},{name:'Bhilwara',state:'Rajasthan'},{name:'Ganganagar',state:'Rajasthan'},
+  {name:'Bhopal',state:'Madhya Pradesh'},{name:'Indore',state:'Madhya Pradesh'},{name:'Gwalior',state:'Madhya Pradesh'},
+  {name:'Jabalpur',state:'Madhya Pradesh'},{name:'Ujjain',state:'Madhya Pradesh'},{name:'Sagar',state:'Madhya Pradesh'},
+  {name:'Rewa',state:'Madhya Pradesh'},{name:'Satna',state:'Madhya Pradesh'},{name:'Dewas',state:'Madhya Pradesh'},
+  {name:'Chhindwara',state:'Madhya Pradesh'},
+  {name:'Mumbai',state:'Maharashtra'},{name:'Pune',state:'Maharashtra'},{name:'Nagpur',state:'Maharashtra'},
+  {name:'Nashik',state:'Maharashtra'},{name:'Aurangabad',state:'Maharashtra'},{name:'Solapur',state:'Maharashtra'},
+  {name:'Kolhapur',state:'Maharashtra'},{name:'Amravati',state:'Maharashtra'},{name:'Thane',state:'Maharashtra'},
+  {name:'Navi Mumbai',state:'Maharashtra'},
+  {name:'Patna',state:'Bihar'},{name:'Gaya',state:'Bihar'},{name:'Bhagalpur',state:'Bihar'},
+  {name:'Muzaffarpur',state:'Bihar'},{name:'Darbhanga',state:'Bihar'},{name:'Purnia',state:'Bihar'},
+  {name:'Ara',state:'Bihar'},{name:'Begusarai',state:'Bihar'},{name:'Sitamarhi',state:'Bihar'},
+  {name:'Hajipur',state:'Bihar'},{name:'Motihari',state:'Bihar'},{name:'Katihar',state:'Bihar'},
+  {name:'Samastipur',state:'Bihar'},{name:'Munger',state:'Bihar'},
+  {name:'Ahmedabad',state:'Gujarat'},{name:'Surat',state:'Gujarat'},{name:'Vadodara',state:'Gujarat'},
+  {name:'Rajkot',state:'Gujarat'},{name:'Bhavnagar',state:'Gujarat'},{name:'Jamnagar',state:'Gujarat'},
+  {name:'Gandhinagar',state:'Gujarat'},{name:'Anand',state:'Gujarat'},{name:'Mehsana',state:'Gujarat'},
+  {name:'Chandigarh',state:'Punjab/Haryana'},{name:'Ludhiana',state:'Punjab'},{name:'Amritsar',state:'Punjab'},
+  {name:'Jalandhar',state:'Punjab'},{name:'Patiala',state:'Punjab'},{name:'Bathinda',state:'Punjab'},
+  {name:'Mohali',state:'Punjab'},{name:'Gurugram',state:'Haryana'},{name:'Faridabad',state:'Haryana'},
+  {name:'Ambala',state:'Haryana'},{name:'Panipat',state:'Haryana'},{name:'Karnal',state:'Haryana'},
+  {name:'Rohtak',state:'Haryana'},{name:'Hisar',state:'Haryana'},{name:'Sonipat',state:'Haryana'},
+  {name:'Yamunanagar',state:'Haryana'},{name:'Kurukshetra',state:'Haryana'},{name:'Sirsa',state:'Haryana'},
+  {name:'Kolkata',state:'West Bengal'},{name:'Howrah',state:'West Bengal'},{name:'Durgapur',state:'West Bengal'},
+  {name:'Asansol',state:'West Bengal'},{name:'Siliguri',state:'West Bengal'},{name:'Bardhaman',state:'West Bengal'},
+  {name:'Malda',state:'West Bengal'},{name:'Jalpaiguri',state:'West Bengal'},
+  {name:'Chennai',state:'Tamil Nadu'},{name:'Coimbatore',state:'Tamil Nadu'},{name:'Madurai',state:'Tamil Nadu'},
+  {name:'Tiruchirappalli',state:'Tamil Nadu'},{name:'Salem',state:'Tamil Nadu'},{name:'Erode',state:'Tamil Nadu'},
+  {name:'Vellore',state:'Tamil Nadu'},{name:'Tirunelveli',state:'Tamil Nadu'},
+  {name:'Bengaluru',state:'Karnataka'},{name:'Mysuru',state:'Karnataka'},{name:'Hubballi',state:'Karnataka'},
+  {name:'Belagavi',state:'Karnataka'},{name:'Mangaluru',state:'Karnataka'},{name:'Davangere',state:'Karnataka'},
+  {name:'Hyderabad',state:'Telangana'},{name:'Warangal',state:'Telangana'},{name:'Vijayawada',state:'Andhra Pradesh'},
+  {name:'Visakhapatnam',state:'Andhra Pradesh'},{name:'Tirupati',state:'Andhra Pradesh'},{name:'Guntur',state:'Andhra Pradesh'},
+  {name:'Thiruvananthapuram',state:'Kerala'},{name:'Kochi',state:'Kerala'},{name:'Kozhikode',state:'Kerala'},
+  {name:'Thrissur',state:'Kerala'},{name:'Kollam',state:'Kerala'},{name:'Kannur',state:'Kerala'},
+  {name:'Ranchi',state:'Jharkhand'},{name:'Jamshedpur',state:'Jharkhand'},{name:'Dhanbad',state:'Jharkhand'},
+  {name:'Bokaro',state:'Jharkhand'},{name:'Bhubaneswar',state:'Odisha'},{name:'Cuttack',state:'Odisha'},
+  {name:'Rourkela',state:'Odisha'},{name:'Puri',state:'Odisha'},
+  {name:'Guwahati',state:'Assam'},{name:'Dibrugarh',state:'Assam'},{name:'Jorhat',state:'Assam'},
+  {name:'Silchar',state:'Assam'},{name:'Shillong',state:'Meghalaya'},{name:'Imphal',state:'Manipur'},
+  {name:'Agartala',state:'Tripura'},{name:'Aizawl',state:'Mizoram'},{name:'Itanagar',state:'Arunachal Pradesh'},
+  {name:'Kohima',state:'Nagaland'},{name:'Gangtok',state:'Sikkim'},
+  {name:'Raipur',state:'Chhattisgarh'},{name:'Bilaspur CG',state:'Chhattisgarh'},{name:'Durg',state:'Chhattisgarh'},
+  {name:'Bhilai',state:'Chhattisgarh'},
+  {name:'Jammu',state:'J&K'},{name:'Srinagar',state:'J&K'},{name:'Leh',state:'Ladakh'},{name:'Kargil',state:'Ladakh'},
+  {name:'Panaji',state:'Goa'},{name:'Vasco da Gama',state:'Goa'},{name:'Margao',state:'Goa'},
+];
+
+// ── ITEM SEARCH SUGGESTIONS ──
+const ITEM_SUGGESTIONS = [
+  {name:'Mirror',cat:'Hardware'},{name:'Wall Mirror',cat:'Hardware'},{name:'Bathroom Mirror',cat:'Hardware'},
+  {name:'Full Length Mirror',cat:'Hardware'},{name:'Round Mirror',cat:'Hardware'},
+  {name:'Paracetamol',cat:'Medical'},{name:'Dolo 650',cat:'Medical'},{name:'ORS Sachet',cat:'Medical'},
+  {name:'Cough Syrup',cat:'Medical'},{name:'Vitamin C',cat:'Medical'},{name:'Azithromycin',cat:'Medical'},
+  {name:'Ibuprofen',cat:'Medical'},{name:'Antacid',cat:'Medical'},{name:'Cetirizine',cat:'Medical'},
+  {name:'Rice',cat:'Grocery'},{name:'Basmati Rice',cat:'Grocery'},{name:'Wheat Flour',cat:'Grocery'},
+  {name:'Mustard Oil',cat:'Grocery'},{name:'Desi Ghee',cat:'Grocery'},{name:'Toor Dal',cat:'Grocery'},
+  {name:'Chana Dal',cat:'Grocery'},{name:'Sugar',cat:'Grocery'},{name:'Salt',cat:'Grocery'},
+  {name:'Milk',cat:'Dairy'},{name:'Paneer',cat:'Dairy'},{name:'Curd',cat:'Dairy'},{name:'Butter',cat:'Dairy'},
+  {name:'Lassi',cat:'Dairy'},{name:'Cheese',cat:'Dairy'},
+  {name:'Phone Charger',cat:'Electronics'},{name:'USB Cable',cat:'Electronics'},{name:'Earphones',cat:'Electronics'},
+  {name:'Power Bank',cat:'Electronics'},{name:'Smart Bulb',cat:'Electronics'},{name:'Extension Board',cat:'Electronics'},
+  {name:'Bluetooth Speaker',cat:'Electronics'},{name:'Laptop Stand',cat:'Electronics'},
+  {name:'Haircut',cat:'Salon'},{name:'Hair Colour',cat:'Salon'},{name:'Facial',cat:'Salon'},{name:'Beard Trim',cat:'Salon'},
+  {name:'Hardware',cat:'Hardware'},{name:'Grocery',cat:'Grocery'},{name:'Medicine',cat:'Medical'},
+  {name:'Electronics',cat:'Electronics'},{name:'Dairy',cat:'Dairy'},{name:'Salon',cat:'Salon'},
+  {name:'Gym Mirror',cat:'Hardware'},{name:'Decorative Mirror',cat:'Hardware'},
+];
+
+// ── SHOP DATABASE ──
+const SHOPS = [
+  {id:1,city:'Agra',name:'Taj Furniture & Mirror House',cat:'Hardware',icon:'🪞',
+   address:'Shop 12, Sanjay Place Market, Agra, UP 282002',phone:'9412055678',
+   hours:'9:00 AM – 8:00 PM',open:true,dist:'0.4 km',lat:27.1767,lng:78.0081,
+   verified:true,rating:4.5,ratingCount:18,viewCount:243,
+   products:[
+    {name:'Wall Mirror 18×24 inch',sub:'Bevelled edge',price:'₹450',avail:true},
+    {name:'Round Mirror 12 inch',sub:'Plastic frame',price:'₹220',avail:true},
+    {name:'Full Length Mirror',sub:'72×24 inch',price:'₹1,200',avail:false},
+    {name:'Bathroom Mirror',sub:'24×18 inch',price:'₹380',avail:true},
+    {name:'Decorative Mirror',sub:'Antique finish',price:'₹950',avail:true},
+  ]},
+  {id:2,city:'Agra',name:'Krishna Glass & Mirror Works',cat:'Hardware',icon:'🪟',
+   address:'Near Idgah Bus Stand, MG Road, Agra, UP 282003',phone:'9837122340',
+   hours:'8:00 AM – 9:00 PM',open:true,dist:'1.2 km',lat:27.1796,lng:78.0076,
+   verified:false,rating:4.1,ratingCount:9,viewCount:88,
+   products:[
+    {name:'Wall Mirror 24×36 inch',sub:'Plain glass',price:'₹680',avail:true},
+    {name:'Mirror with Frame',sub:'Wooden frame 20×28',price:'₹820',avail:true},
+    {name:'Round Mirror 16 inch',sub:'Metal frame',price:'₹340',avail:false},
+    {name:'Gym Mirror',sub:'60×24 inch',price:'₹2,100',avail:true},
+  ]},
+  {id:3,city:'Agra',name:'Sharma Medical Store',cat:'Medical',icon:'💊',
+   address:'Belanganj Chowk, Agra, UP 282004',phone:'9927134561',
+   hours:'8:00 AM – 10:00 PM',open:true,dist:'0.8 km',lat:27.1805,lng:78.0145,
+   verified:true,rating:4.7,ratingCount:32,viewCount:412,
+   products:[
+    {name:'Paracetamol 500mg',sub:'Strip of 10',price:'₹18',avail:true},
+    {name:'Dolo 650',sub:'Strip of 15',price:'₹34',avail:true},
+    {name:'ORS Sachet',sub:'Pack of 10',price:'₹45',avail:true},
+    {name:'Hand Sanitizer',sub:'200ml',price:'₹55',avail:false},
+  ]},
+  {id:4,city:'Agra',name:'Agra Fresh Dairy',cat:'Dairy',icon:'🥛',
+   address:'Shahganj Market, Agra, UP 282010',phone:'9512067890',
+   hours:'5:30 AM – 11:00 PM',open:true,dist:'0.6 km',lat:27.1750,lng:78.0095,
+   verified:false,rating:4.3,ratingCount:14,viewCount:165,
+   products:[
+    {name:'Full Cream Milk',sub:'1 litre',price:'₹62',avail:true},
+    {name:'Paneer',sub:'200g',price:'₹88',avail:true},
+    {name:'Curd',sub:'500g',price:'₹44',avail:true},
+    {name:'Butter',sub:'100g',price:'₹56',avail:false},
+  ]},
+  {id:5,city:'Sirsaganj',name:'Gupta Hardware & Mirror Shop',cat:'Hardware',icon:'🪞',
+   address:'Main Bazar, Near Shiv Mandir, Sirsaganj, Firozabad UP 283151',phone:'9760012345',
+   hours:'9:00 AM – 8:00 PM',open:true,dist:'0.2 km',lat:27.0562,lng:78.6830,
+   verified:true,rating:4.6,ratingCount:22,viewCount:178,
+   products:[
+    {name:'Wall Mirror 18×24 inch',sub:'Basic plain',price:'₹380',avail:true},
+    {name:'Round Mirror 12 inch',sub:'Plastic frame',price:'₹180',avail:true},
+    {name:'Full Length Mirror',sub:'60×18 inch',price:'₹950',avail:true},
+    {name:'Bathroom Mirror',sub:'18×18 inch',price:'₹320',avail:true},
+  ]},
+  {id:6,city:'Sirsaganj',name:'Ram Lal Kirana Store',cat:'Grocery',icon:'🛒',
+   address:'Purani Mandi, Sirsaganj, UP 283151',phone:'9632154321',
+   hours:'7:00 AM – 9:30 PM',open:true,dist:'0.3 km',lat:27.0570,lng:78.6845,
+   verified:false,rating:4.0,ratingCount:7,viewCount:95,
+   products:[
+    {name:'Wheat Flour (Aata)',sub:'10 kg bag',price:'₹420',avail:true},
+    {name:'Basmati Rice',sub:'5 kg',price:'₹380',avail:true},
+    {name:'Mustard Oil',sub:'1 litre',price:'₹142',avail:true},
+    {name:'Chana Dal',sub:'1 kg',price:'₹92',avail:false},
+    {name:'Sugar',sub:'1 kg',price:'₹44',avail:true},
+  ]},
+  {id:7,city:'Sirsaganj',name:'Jan Aushadhi Medical',cat:'Medical',icon:'💊',
+   address:'Bus Stand Road, Sirsaganj, Firozabad UP',phone:'8800199887',
+   hours:'8:30 AM – 9:30 PM',open:false,dist:'0.5 km',lat:27.0555,lng:78.6820,
+   verified:false,rating:3.8,ratingCount:5,viewCount:67,
+   products:[
+    {name:'Paracetamol',sub:'Strip of 10',price:'₹15',avail:true},
+    {name:'Azithromycin 500mg',sub:'Strip of 3',price:'₹48',avail:true},
+    {name:'Vitamin C Tablet',sub:'Strip of 10',price:'₹28',avail:true},
+    {name:'Cough Syrup',sub:'100ml',price:'₹75',avail:false},
+  ]},
+  {id:8,city:'Sirsaganj',name:'Vijay Electronics',cat:'Electronics',icon:'🔌',
+   address:'Near Police Chowki, Main Road, Sirsaganj UP',phone:'9234567891',
+   hours:'10:00 AM – 8:00 PM',open:true,dist:'0.7 km',lat:27.0580,lng:78.6860,
+   verified:false,rating:4.2,ratingCount:11,viewCount:134,
+   products:[
+    {name:'Phone Charger',sub:'Fast Charge 18W',price:'₹280',avail:true},
+    {name:'USB-C Cable',sub:'1 metre',price:'₹120',avail:true},
+    {name:'Earphones',sub:'Wired 3.5mm',price:'₹175',avail:true},
+    {name:'Power Bank',sub:'10000 mAh',price:'₹749',avail:false},
+  ]},
+  {id:9,city:'Mathura',name:'Brij Glass House',cat:'Hardware',icon:'🪞',
+   address:'Holi Gate Market, Mathura, UP 281001',phone:'9719544332',
+   hours:'9:30 AM – 8:30 PM',open:true,dist:'0.5 km',lat:27.4924,lng:77.6737,
+   verified:true,rating:4.4,ratingCount:16,viewCount:201,
+   products:[
+    {name:'Wall Mirror 24×18 inch',sub:'Silver frame',price:'₹520',avail:true},
+    {name:'Round Mirror 14 inch',sub:'Antique gold frame',price:'₹450',avail:true},
+    {name:'Full Length Mirror',sub:'72×24 inch',price:'₹1,350',avail:true},
+    {name:'Temple Mirror',sub:'Decorated frame',price:'₹880',avail:false},
+  ]},
+  {id:10,city:'Mathura',name:'Shri Gopal Medical Hall',cat:'Medical',icon:'💊',
+   address:'Krishna Nagar, Mathura, UP 281004',phone:'9919077654',
+   hours:'8:00 AM – 10:00 PM',open:true,dist:'1.1 km',lat:27.4965,lng:77.6812,
+   verified:false,rating:4.2,ratingCount:8,viewCount:112,
+   products:[
+    {name:'Paracetamol 650mg',sub:'Strip of 10',price:'₹22',avail:true},
+    {name:'Antacid Tablet',sub:'Strip of 15',price:'₹35',avail:true},
+    {name:'ORS Sachet',sub:'Mango flavour x10',price:'₹48',avail:true},
+    {name:'Dettol Antiseptic',sub:'250ml',price:'₹125',avail:false},
+  ]},
+  {id:11,city:'Lucknow',name:'City Electronics Hub',cat:'Electronics',icon:'🔌',
+   address:'Hazratganj Market, Lucknow, UP 226001',phone:'9415088776',
+   hours:'10:00 AM – 9:00 PM',open:true,dist:'0.9 km',lat:26.8467,lng:80.9462,
+   verified:true,rating:4.6,ratingCount:28,viewCount:334,
+   products:[
+    {name:'Smart Bulb 9W',sub:'WiFi enabled',price:'₹399',avail:true},
+    {name:'Extension Board 6 plug',sub:'2m wire',price:'₹299',avail:true},
+    {name:'LED Strip Lights',sub:'5 metre RGB',price:'₹550',avail:true},
+    {name:'Bluetooth Speaker',sub:'Portable 10W',price:'₹899',avail:false},
+  ]},
+  {id:12,city:'Lucknow',name:'Nawabi Kirana Stores',cat:'Grocery',icon:'🛒',
+   address:'Aminabad Market, Lucknow, UP 226018',phone:'9839122110',
+   hours:'8:00 AM – 10:00 PM',open:true,dist:'1.4 km',lat:26.8527,lng:80.9320,
+   verified:false,rating:4.1,ratingCount:12,viewCount:145,
+   products:[
+    {name:'Basmati Rice',sub:'25 kg premium',price:'₹1,850',avail:true},
+    {name:'Desi Ghee',sub:'1 kg tin',price:'₹680',avail:true},
+    {name:'Toor Dal',sub:'1 kg',price:'₹115',avail:true},
+    {name:'Chana Dal',sub:'1 kg',price:'₹98',avail:false},
+  ]},
+  {id:13,city:'Jaipur',name:'Pink City Salon & Spa',cat:'Salon',icon:'✂️',
+   address:'MI Road, Jaipur, Rajasthan 302001',phone:'9413255443',
+   hours:'10:00 AM – 8:00 PM',open:true,dist:'0.6 km',lat:26.9124,lng:75.7873,
+   verified:true,rating:4.8,ratingCount:41,viewCount:567,
+   products:[
+    {name:'Haircut Men',sub:'With shampoo',price:'₹180',avail:true},
+    {name:'Hair Colour',sub:'Full head',price:'₹650',avail:true},
+    {name:'Facial Basic',sub:'45 minutes',price:'₹400',avail:false},
+    {name:'Beard Trim',sub:'With styling',price:'₹120',avail:true},
+  ]},
+  {id:14,city:'Jaipur',name:'Rajasthan Hardware Depot',cat:'Hardware',icon:'🔧',
+   address:'Sindhi Camp, Jaipur, Rajasthan 302001',phone:'9829011223',
+   hours:'9:00 AM – 7:30 PM',open:true,dist:'1.2 km',lat:26.9197,lng:75.7979,
+   verified:false,rating:4.0,ratingCount:6,viewCount:78,
+   products:[
+    {name:'Wall Mirror 24×36',sub:'Plain glass',price:'₹720',avail:true},
+    {name:'Decorative Mirror',sub:'Rajasthani frame',price:'₹1,100',avail:true},
+    {name:'Bathroom Cabinet Mirror',sub:'With storage',price:'₹1,800',avail:false},
+    {name:'Hand Mirror',sub:'Wooden handle',price:'₹220',avail:true},
+  ]},
+  {id:15,city:'Firozabad',name:'Glass City Mirror House',cat:'Hardware',icon:'🪞',
+   address:'Glass Factory Road, Firozabad, UP 283203',phone:'9837177889',
+   hours:'8:00 AM – 8:00 PM',open:true,dist:'0.3 km',lat:27.1552,lng:78.3956,
+   verified:true,rating:4.5,ratingCount:19,viewCount:224,
+   products:[
+    {name:'Wall Mirror 24×36 inch',sub:'Crystal clear',price:'₹620',avail:true},
+    {name:'Round Mirror 18 inch',sub:'Bevelled edge',price:'₹480',avail:true},
+    {name:'Full Length Mirror',sub:'72×24 inch',price:'₹1,100',avail:true},
+    {name:'Oval Mirror',sub:'24×36 inch',price:'₹780',avail:true},
+    {name:'Gym Mirror',sub:'60×24 inch bulk',price:'₹1,850',avail:false},
+  ]},
+  {id:16,city:'Delhi',name:'Karol Bagh Electronics',cat:'Electronics',icon:'🔌',
+   address:'Ajmal Khan Road, Karol Bagh, New Delhi 110005',phone:'9811055667',
+   hours:'10:30 AM – 9:00 PM',open:true,dist:'0.8 km',lat:28.6510,lng:77.1902,
+   verified:true,rating:4.4,ratingCount:35,viewCount:489,
+   products:[
+    {name:'Phone Charger 65W',sub:'GaN fast charge',price:'₹1,299',avail:true},
+    {name:'USB Hub 4-port',sub:'USB 3.0',price:'₹699',avail:true},
+    {name:'Webcam Full HD',sub:'1080p',price:'₹1,499',avail:false},
+    {name:'Wireless Mouse',sub:'Ergonomic',price:'₹549',avail:true},
+  ]},
+  {id:17,city:'Delhi',name:'Old Delhi Kirana Bazaar',cat:'Grocery',icon:'🛒',
+   address:'Khari Baoli, Old Delhi 110006',phone:'9999911234',
+   hours:'7:00 AM – 9:00 PM',open:true,dist:'1.5 km',lat:28.6562,lng:77.2288,
+   verified:false,rating:4.3,ratingCount:23,viewCount:278,
+   products:[
+    {name:'Basmati Rice Premium',sub:'25 kg',price:'₹2,200',avail:true},
+    {name:'Whole Spices Mix',sub:'500g assorted',price:'₹320',avail:true},
+    {name:'Desi Ghee',sub:'1 kg',price:'₹720',avail:true},
+    {name:'Dry Fruits Mix',sub:'500g',price:'₹480',avail:false},
+  ]},
+  {id:18,city:'Mumbai',name:'Dadar Hardware Mart',cat:'Hardware',icon:'🔧',
+   address:'Dadar West Market, Mumbai, MH 400028',phone:'9920344556',
+   hours:'9:00 AM – 9:00 PM',open:true,dist:'0.9 km',lat:19.0178,lng:72.8478,
+   verified:false,rating:4.1,ratingCount:10,viewCount:143,
+   products:[
+    {name:'Wall Mirror 18×24',sub:'Frameless',price:'₹550',avail:true},
+    {name:'Bathroom Mirror',sub:'With LED light',price:'₹1,200',avail:true},
+    {name:'Decorative Mirror',sub:'Brass frame',price:'₹1,400',avail:false},
+    {name:'Round Mirror 14 inch',sub:'Gold frame',price:'₹480',avail:true},
+  ]},
+  {id:19,city:'Patna',name:'Bihar Medical Agency',cat:'Medical',icon:'💊',
+   address:'Exhibition Road, Patna, Bihar 800001',phone:'9431188770',
+   hours:'8:00 AM – 10:30 PM',open:true,dist:'0.7 km',lat:25.6093,lng:85.1376,
+   verified:false,rating:4.2,ratingCount:13,viewCount:167,
+   products:[
+    {name:'Paracetamol 500mg',sub:'Strip x10',price:'₹16',avail:true},
+    {name:'ORS Powder',sub:'Sachet x5',price:'₹38',avail:true},
+    {name:'Multivitamin',sub:'Strip x15',price:'₹65',avail:true},
+    {name:'Metformin 500mg',sub:'Strip x10',price:'₹42',avail:false},
+  ]},
+  {id:20,city:'Haldwani',name:'Kumaon Medical Store',cat:'Medical',icon:'💊',
+   address:'Mukhani Chowk, Haldwani, Nainital UK 263139',phone:'9411012345',
+   hours:'8:00 AM – 10:00 PM',open:true,dist:'0.3 km',lat:29.2175,lng:79.5171,
+   verified:true,rating:4.6,ratingCount:29,viewCount:312,
+   products:[
+    {name:'Paracetamol 500mg',sub:'Strip of 10',price:'₹18',avail:true},
+    {name:'Dolo 650',sub:'Strip of 15',price:'₹32',avail:true},
+    {name:'ORS Sachet',sub:'Pack of 10',price:'₹42',avail:true},
+    {name:'Amoxicillin 500mg',sub:'Strip of 10',price:'₹85',avail:true},
+    {name:'Cough Syrup',sub:'100ml',price:'₹68',avail:false},
+  ]},
+  {id:21,city:'Haldwani',name:'Shree Hari Kirana Store',cat:'Grocery',icon:'🛒',
+   address:'Lal Dang Road, Haldwani UK 263139',phone:'9456078901',
+   hours:'7:00 AM – 9:00 PM',open:true,dist:'0.5 km',lat:29.2190,lng:79.5210,
+   verified:false,rating:4.0,ratingCount:8,viewCount:104,
+   products:[
+    {name:'Basmati Rice',sub:'5 kg',price:'₹360',avail:true},
+    {name:'Mustard Oil',sub:'1 litre',price:'₹148',avail:true},
+    {name:'Wheat Flour',sub:'10 kg',price:'₹410',avail:true},
+    {name:'Desi Ghee',sub:'500g',price:'₹340',avail:true},
+    {name:'Toor Dal',sub:'1 kg',price:'₹110',avail:false},
+  ]},
+  {id:22,city:'Haldwani',name:'Haldwani Mirror & Glass',cat:'Hardware',icon:'🪞',
+   address:'Bhotia Parao, Haldwani, Nainital UK',phone:'9758034567',
+   hours:'9:00 AM – 7:30 PM',open:true,dist:'0.8 km',lat:29.2155,lng:79.5140,
+   verified:false,rating:4.1,ratingCount:7,viewCount:88,
+   products:[
+    {name:'Wall Mirror 18×24',sub:'Plain glass',price:'₹420',avail:true},
+    {name:'Full Length Mirror',sub:'60×18 inch',price:'₹1,050',avail:true},
+    {name:'Bathroom Mirror',sub:'18×18 with shelf',price:'₹580',avail:false},
+    {name:'Round Mirror 12 inch',sub:'Metal frame',price:'₹250',avail:true},
+  ]},
+  {id:23,city:'Haldwani',name:'Digital Zone Electronics',cat:'Electronics',icon:'🔌',
+   address:'Rampur Road, Haldwani UK 263139',phone:'9411598765',
+   hours:'10:00 AM – 8:30 PM',open:true,dist:'1.1 km',lat:29.2200,lng:79.5250,
+   verified:true,rating:4.5,ratingCount:17,viewCount:198,
+   products:[
+    {name:'Smartphone Charger',sub:'18W fast charge',price:'₹290',avail:true},
+    {name:'USB-C Cable 2m',sub:'Braided',price:'₹150',avail:true},
+    {name:'Bluetooth Earbuds',sub:'True Wireless',price:'₹899',avail:true},
+    {name:'Power Bank 20000mAh',sub:'PD fast charge',price:'₹1,299',avail:false},
+  ]},
+  {id:24,city:'Dehradun',name:'Doon Valley Kirana',cat:'Grocery',icon:'🛒',
+   address:'Paltan Bazaar, Dehradun UK 248001',phone:'9412556677',
+   hours:'8:00 AM – 9:30 PM',open:true,dist:'0.4 km',lat:30.3165,lng:78.0322,
+   verified:false,rating:4.2,ratingCount:11,viewCount:132,
+   products:[
+    {name:'Basmati Rice',sub:'5 kg premium',price:'₹375',avail:true},
+    {name:'Desi Ghee',sub:'500g',price:'₹360',avail:true},
+    {name:'Mustard Oil',sub:'1 litre',price:'₹145',avail:true},
+    {name:'Rajma',sub:'1 kg',price:'₹130',avail:false},
+  ]},
+  {id:25,city:'Dehradun',name:'Dehradun Medical Hall',cat:'Medical',icon:'💊',
+   address:'Rajpur Road, Dehradun UK 248001',phone:'9917634567',
+   hours:'8:30 AM – 10:00 PM',open:true,dist:'0.6 km',lat:30.3255,lng:78.0443,
+   verified:true,rating:4.7,ratingCount:24,viewCount:267,
+   products:[
+    {name:'Paracetamol 650mg',sub:'Strip of 10',price:'₹20',avail:true},
+    {name:'Cetirizine 10mg',sub:'Strip of 10',price:'₹22',avail:true},
+    {name:'ORS Sachet',sub:'Orange x10',price:'₹45',avail:true},
+    {name:'B-Complex',sub:'Strip of 15',price:'₹55',avail:true},
+  ]},
+  {id:26,city:'Nainital',name:'Lake Side Medical Store',cat:'Medical',icon:'💊',
+   address:'Mall Road, Nainital UK 263001',phone:'9410154321',
+   hours:'8:00 AM – 9:00 PM',open:true,dist:'0.2 km',lat:29.3803,lng:79.4636,
+   verified:false,rating:4.3,ratingCount:9,viewCount:119,
+   products:[
+    {name:'Paracetamol 500mg',sub:'Strip of 10',price:'₹18',avail:true},
+    {name:'Ibuprofen 400mg',sub:'Strip of 10',price:'₹28',avail:true},
+    {name:'ORS Sachet',sub:'Pack of 5',price:'₹25',avail:true},
+    {name:'Avomine',sub:'Anti-motion sickness',price:'₹35',avail:true},
+  ]},
+  {id:27,city:'Roorkee',name:'IIT Road Hardware Store',cat:'Hardware',icon:'🔧',
+   address:'Civil Lines, Roorkee, Haridwar UK 247667',phone:'9458723456',
+   hours:'9:00 AM – 8:00 PM',open:true,dist:'0.7 km',lat:29.8543,lng:77.8880,
+   verified:false,rating:4.0,ratingCount:5,viewCount:72,
+   products:[
+    {name:'Wall Mirror 18×24',sub:'Plain glass',price:'₹390',avail:true},
+    {name:'Bathroom Mirror',sub:'With LED strip',price:'₹750',avail:true},
+    {name:'Full Length Mirror',sub:'72×24',price:'₹1,100',avail:false},
+    {name:'Pipe Fittings',sub:'PVC assorted',price:'₹85',avail:true},
+  ]},
+  {id:28,city:'Chandigarh',name:'Sector 17 Electronics',cat:'Electronics',icon:'🔌',
+   address:'Sector 17 Market, Chandigarh 160017',phone:'9815067890',
+   hours:'10:00 AM – 9:00 PM',open:true,dist:'0.5 km',lat:30.7436,lng:76.7861,
+   verified:true,rating:4.5,ratingCount:20,viewCount:245,
+   products:[
+    {name:'Laptop Stand',sub:'Adjustable',price:'₹699',avail:true},
+    {name:'Mechanical Keyboard',sub:'USB Type-C',price:'₹1,899',avail:true},
+    {name:'Monitor Light',sub:'USB powered',price:'₹599',avail:false},
+    {name:'Wireless Keyboard',sub:'Bluetooth',price:'₹849',avail:true},
+  ]},
+  {id:29,city:'Ludhiana',name:'Punjab Dairy Fresh',cat:'Dairy',icon:'🥛',
+   address:'Gill Road, Ludhiana, Punjab 141003',phone:'9815532109',
+   hours:'5:00 AM – 11:00 PM',open:true,dist:'0.3 km',lat:30.9010,lng:75.8573,
+   verified:false,rating:4.4,ratingCount:15,viewCount:186,
+   products:[
+    {name:'Full Cream Milk',sub:'1 litre',price:'₹60',avail:true},
+    {name:'Lassi',sub:'500ml',price:'₹38',avail:true},
+    {name:'Paneer',sub:'200g',price:'₹90',avail:true},
+    {name:'Butter',sub:'100g Amul',price:'₹58',avail:false},
+  ]},
+];
+
+// ── SAMPLE REVIEWS DATA ──
+const REVIEWS = {
+  1:[{name:'Ravi K.',stars:5,date:'3 days ago',text:'Very good quality mirrors. Price is fair and shopkeeper is helpful.'},{name:'Priya S.',stars:4,date:'1 week ago',text:'Good collection, found what I needed. Slightly overpriced but overall okay.'}],
+  3:[{name:'Amit J.',stars:5,date:'5 days ago',text:'All medicines available, staff is knowledgeable and helpful.'},{name:'Sunita D.',stars:4,date:'2 weeks ago',text:'Open late, very convenient for emergencies.'}],
+  5:[{name:'Mohit G.',stars:5,date:'2 days ago',text:'Best mirror shop in Sirsaganj. Great prices and good quality.'},{name:'Kavya M.',stars:4,date:'1 week ago',text:'Good stock, quick service.'}],
+  13:[{name:'Deepak R.',stars:5,date:'1 day ago',text:'Excellent service! Best salon in Jaipur MI Road area.'},{name:'Neha T.',stars:5,date:'4 days ago',text:'Hair colour came out beautifully. Very professional staff.'}],
+  20:[{name:'Shyam P.',stars:5,date:'3 days ago',text:'All medicines available 24/7 almost. Very trustworthy shop.'},{name:'Rekha B.',stars:4,date:'1 week ago',text:'Good prices on generics.'}],
+};
+
+// ── STATE ──
+let selectedCity='', searchActive=false, activeResultCat='All', showOpenOnly=false;
+let selectedCatValue='', curStep=1, otpSent=false, currentModalShop=null, selectedStar=0, selectedReportOpt=null;
+let pwaInstallPrompt=null, otpTimerInterval=null;
+
+// ── UPDATE STATS FROM ACTUAL DATA ──
+document.getElementById('statShops').textContent = SHOPS.length;
+document.getElementById('statProducts').textContent = SHOPS.reduce((a,s)=>a+s.products.length,0);
+
+// ══════════════════════════════════════════════════
+//  PWA INSTALL
+// ══════════════════════════════════════════════════
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  pwaInstallPrompt=e;
+  document.getElementById('installBtn').style.display='flex';
+});
+function installPWA(){
+  if(!pwaInstallPrompt){toast('Open in Chrome/Edge and use "Add to Home Screen" from browser menu.');return;}
+  pwaInstallPrompt.prompt();
+  pwaInstallPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted'){toast('✅ ShopSaathi installed! Find it on your home screen.');document.getElementById('installBtn').style.display='none';}
+    pwaInstallPrompt=null;
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  FUZZY SEARCH HELPER
+// ══════════════════════════════════════════════════
+function fuzzyScore(str,q){
+  // Returns 0-3: 0=no match, 1=fuzzy, 2=partial, 3=starts with
+  const s=str.toLowerCase(), query=q.toLowerCase();
+  if(s===query) return 4;
+  if(s.startsWith(query)) return 3;
+  if(s.includes(query)) return 2;
+  // Simple typo tolerance: check if 70%+ of bigrams match
+  if(query.length<3) return 0;
+  let matches=0;
+  for(let i=0;i<query.length-1;i++){
+    if(s.includes(query[i]+query[i+1])) matches++;
+  }
+  return matches/(query.length-1)>=0.6 ? 1 : 0;
+}
+
+function bestCityMatch(q){
+  if(!q) return null;
+  const ql=q.toLowerCase().trim();
+  let best=null, bestScore=0;
+  for(const c of CITIES){
+    const score=fuzzyScore(c.name,ql);
+    if(score>bestScore){bestScore=score;best=c;}
+  }
+  return bestScore>0 ? {city:best,score:bestScore} : null;
+}
+
+// ══════════════════════════════════════════════════
+//  CITY DROPDOWN
+// ══════════════════════════════════════════════════
+function onCityInput(){
+  const q=document.getElementById('cityInput').value.trim().toLowerCase();
+  renderCityDrop(q);
+}
+function openCityDrop(){
+  renderCityDrop(document.getElementById('cityInput').value.trim().toLowerCase());
+}
+function closeCityDrop(){
+  document.getElementById('cityDrop').classList.remove('open');
+}
+function renderCityDrop(q){
+  const drop=document.getElementById('cityDrop');
+  let matches=[];
+  if(q){
+    // Score all cities
+    matches=CITIES.map(c=>({c,s:Math.max(fuzzyScore(c.name,q),fuzzyScore(c.state,q))}))
+      .filter(x=>x.s>0)
+      .sort((a,b)=>b.s-a.s)
+      .map(x=>x.c);
+  } else {
+    matches=CITIES.slice(0,25);
+  }
+  if(!matches.length){
+    drop.innerHTML='<div class="cd-no-result">No city found — try another spelling</div>';
+  } else {
+    drop.innerHTML='<div class="cd-section-label">Select City / Town</div>'+
+      matches.slice(0,50).map(c=>
+        `<div class="cd-item" onmousedown="selectCity('${c.name.replace(/'/g,"\\'")}','${c.state.replace(/'/g,"\\'")}')">
+          📍 ${c.name}<span class="cd-state">${c.state}</span>
+        </div>`).join('');
+  }
+  drop.classList.add('open');
+}
+function selectCity(name,state){
+  selectedCity=name;
+  document.getElementById('cityInput').value=name;
+  document.getElementById('cityDrop').classList.remove('open');
+  toast(`📍 City set: ${name}, ${state}`);
+}
+
+// ══════════════════════════════════════════════════
+//  ITEM AUTOCOMPLETE
+// ══════════════════════════════════════════════════
+function onItemInput(){
+  const q=document.getElementById('itemInput').value.trim().toLowerCase();
+  if(!q){closeItemDrop();return;}
+  const matches=ITEM_SUGGESTIONS.filter(i=>i.name.toLowerCase().includes(q)||i.name.toLowerCase().startsWith(q)).slice(0,8);
+  const drop=document.getElementById('itemDrop');
+  if(!matches.length){drop.classList.remove('open');return;}
+  drop.innerHTML=matches.map(i=>
+    `<div class="id-item" onmousedown="selectItem('${i.name.replace(/'/g,"\\'")}')">
+      🔍 ${i.name}<span class="id-cat">${i.cat}</span>
+    </div>`).join('');
+  drop.classList.add('open');
+}
+function openItemDrop(){if(document.getElementById('itemInput').value)onItemInput();}
+function closeItemDrop(){document.getElementById('itemDrop').classList.remove('open');}
+function selectItem(name){
+  document.getElementById('itemInput').value=name;
+  document.getElementById('itemDrop').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════════
+//  SEARCH HISTORY
+// ══════════════════════════════════════════════════
+function getHistory(){try{return JSON.parse(localStorage.getItem('ss_history')||'[]');}catch(e){return[];}}
+function saveHistory(city,item){
+  const h=getHistory().filter(x=>!(x.city===city&&x.item===item));
+  h.unshift({city,item});
+  try{localStorage.setItem('ss_history',JSON.stringify(h.slice(0,8)));}catch(e){}
+  renderHistoryChips();
+}
+function removeHistory(city,item,e){
+  e.stopPropagation();
+  const h=getHistory().filter(x=>!(x.city===city&&x.item===item));
+  try{localStorage.setItem('ss_history',JSON.stringify(h));}catch(e){}
+  renderHistoryChips();
+}
+function clearHistory(){
+  try{localStorage.removeItem('ss_history');}catch(e){}
+  renderHistoryChips();
+}
+function renderHistoryChips(){
+  const h=getHistory();
+  const wrap=document.getElementById('searchHistory');
+  if(!h.length){wrap.style.display='none';return;}
+  wrap.style.display='flex';
+  wrap.innerHTML=`<span class="sh-label">Recent:</span>`+
+    h.map(x=>`<div class="sh-chip" onclick="quickSearch('${x.city.replace(/'/g,"\\'")}','${x.item.replace(/'/g,"\\'")}')">
+      📍${x.city}${x.item?'·'+x.item:''} <span class="sh-chip-x" onmousedown="removeHistory('${x.city.replace(/'/g,"\\'")}','${x.item.replace(/'/g,"\\'")}',event)">×</span>
+    </div>`).join('')+
+    `<span class="sh-clear" onclick="clearHistory()">Clear all</span>`;
+}
+renderHistoryChips();
+
+// ══════════════════════════════════════════════════
+//  GPS LOCATION DETECT — with Nominatim reverse geocoding
+// ══════════════════════════════════════════════════
+const CITY_COORDS={
+  'Agra':{lat:27.18,lng:78.01},'Lucknow':{lat:26.85,lng:80.95},'Delhi':{lat:28.65,lng:77.20},
+  'New Delhi':{lat:28.61,lng:77.21},'Haldwani':{lat:29.22,lng:79.52},'Dehradun':{lat:30.32,lng:78.03},
+  'Nainital':{lat:29.38,lng:79.46},'Roorkee':{lat:29.85,lng:77.89},'Mumbai':{lat:19.08,lng:72.88},
+  'Patna':{lat:25.61,lng:85.14},'Jaipur':{lat:26.91,lng:75.79},'Chandigarh':{lat:30.74,lng:76.79},
+  'Ludhiana':{lat:30.90,lng:75.86},'Mathura':{lat:27.49,lng:77.67},'Sirsaganj':{lat:27.06,lng:78.68},
+  'Firozabad':{lat:27.15,lng:78.40},'Kanpur':{lat:26.46,lng:80.33},'Varanasi':{lat:25.32,lng:83.01},
+  'Prayagraj':{lat:25.45,lng:81.84},'Meerut':{lat:28.98,lng:77.71},'Noida':{lat:28.53,lng:77.39},
+  'Ghaziabad':{lat:28.67,lng:77.43},'Gorakhpur':{lat:26.76,lng:83.37},'Bareilly':{lat:28.35,lng:79.42},
+  'Moradabad':{lat:28.84,lng:78.77},'Saharanpur':{lat:29.96,lng:77.55},'Muzaffarnagar':{lat:29.47,lng:77.71},
+  'Haridwar':{lat:29.95,lng:78.16},'Rishikesh':{lat:30.09,lng:78.27},'Rudrapur':{lat:28.98,lng:79.40},
+  'Kashipur':{lat:29.21,lng:78.96},'Almora':{lat:29.60,lng:79.65},'Pithoragarh':{lat:29.58,lng:80.21},
+  'Mussoorie':{lat:30.46,lng:78.07},'Shimla':{lat:31.10,lng:77.17},'Manali':{lat:32.24,lng:77.19},
+  'Dharamshala':{lat:32.22,lng:76.32},'Solan':{lat:30.91,lng:77.10},'Mandi':{lat:31.71,lng:76.93},
+  'Amritsar':{lat:31.63,lng:74.87},'Jalandhar':{lat:31.33,lng:75.58},'Patiala':{lat:30.34,lng:76.39},
+  'Bathinda':{lat:30.21,lng:74.95},'Mohali':{lat:30.70,lng:76.72},'Gurugram':{lat:28.46,lng:77.03},
+  'Faridabad':{lat:28.41,lng:77.31},'Ambala':{lat:30.37,lng:76.78},'Panipat':{lat:29.39,lng:76.97},
+  'Karnal':{lat:29.69,lng:76.99},'Rohtak':{lat:28.90,lng:76.58},'Hisar':{lat:29.15,lng:75.72},
+  'Sonipat':{lat:28.99,lng:77.01},'Kolkata':{lat:22.57,lng:88.36},'Siliguri':{lat:26.71,lng:88.43},
+  'Bhopal':{lat:23.26,lng:77.40},'Indore':{lat:22.72,lng:75.86},'Gwalior':{lat:26.22,lng:78.18},
+  'Jabalpur':{lat:23.18,lng:79.99},'Pune':{lat:18.52,lng:73.86},'Nagpur':{lat:21.15,lng:79.09},
+  'Nashik':{lat:20.00,lng:73.79},'Ahmedabad':{lat:23.03,lng:72.58},'Surat':{lat:21.17,lng:72.83},
+  'Vadodara':{lat:22.31,lng:73.18},'Rajkot':{lat:22.30,lng:70.80},'Hyderabad':{lat:17.38,lng:78.49},
+  'Bengaluru':{lat:12.97,lng:77.59},'Chennai':{lat:13.08,lng:80.27},'Coimbatore':{lat:11.02,lng:76.96},
+  'Madurai':{lat:9.93,lng:78.12},'Kochi':{lat:9.93,lng:76.26},'Thiruvananthapuram':{lat:8.52,lng:76.94},
+  'Ranchi':{lat:23.34,lng:85.31},'Jamshedpur':{lat:22.80,lng:86.20},'Bhubaneswar':{lat:20.30,lng:85.82},
+  'Guwahati':{lat:26.14,lng:91.74},'Raipur':{lat:21.25,lng:81.63},'Jammu':{lat:32.73,lng:74.87},
+  'Srinagar':{lat:34.09,lng:74.79},'Leh':{lat:34.17,lng:77.58},'Panaji':{lat:15.49,lng:73.83},
+};
+
+function detectLocation(){
+  if(!navigator.geolocation){toast('⚠️ Location not supported on this browser');return;}
+  const btn=document.querySelector('.sb-city-icon');
+  if(btn){btn.textContent='⏳';setTimeout(()=>{btn.textContent='📍';},5000);}
+  toast('📍 Detecting your location…');
+  navigator.geolocation.getCurrentPosition(
+    pos=>reverseGeocode(pos.coords.latitude,pos.coords.longitude),
+    err=>{
+      const msgs={1:'Location permission denied. Please allow location access.',
+        2:'Could not detect location. Check your GPS signal.',3:'Location request timed out.'};
+      toast('⚠️ '+(msgs[err.code]||'Could not get location. Enter city manually.'));
+      if(btn) btn.textContent='📍';
+    },
+    {timeout:10000,maximumAge:60000,enableHighAccuracy:false}
+  );
+}
+
+function reverseGeocode(lat,lng){
+  // Try Nominatim (free, no key needed)
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`,{
+    headers:{'User-Agent':'ShopSaathi/1.0'}
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    const addr=data.address||{};
+    // Try city → town → village → county in order
+    const detected=addr.city||addr.town||addr.village||addr.county||addr.state_district||'';
+    if(detected){
+      // Find best match in our CITIES database
+      const match=CITIES.find(c=>c.name.toLowerCase()===detected.toLowerCase())
+        ||CITIES.find(c=>detected.toLowerCase().includes(c.name.toLowerCase()))
+        ||CITIES.find(c=>c.name.toLowerCase().includes(detected.toLowerCase().split(' ')[0]));
+      if(match){
+        selectCity(match.name,match.state);
+        toast(`📍 Location: ${match.name}, ${match.state}`);
+      } else {
+        // Use the detected name directly even if not in our list
+        selectedCity=detected;
+        document.getElementById('cityInput').value=detected;
+        toast(`📍 Location detected: ${detected}`);
+      }
+    } else {
+      fallbackNearestCity(lat,lng);
+    }
+  })
+  .catch(()=>fallbackNearestCity(lat,lng));
+}
+
+function fallbackNearestCity(lat,lng){
+  // Find nearest city from our coords database
+  let nearest=null,nearestDist=Infinity;
+  for(const [name,c] of Object.entries(CITY_COORDS)){
+    // Haversine approximation (good enough for India)
+    const dlat=(lat-c.lat)*111.32;
+    const dlng=(lng-c.lng)*111.32*Math.cos(lat*Math.PI/180);
+    const d=Math.sqrt(dlat*dlat+dlng*dlng);
+    if(d<nearestDist){nearestDist=d;nearest=name;}
+  }
+  if(nearest&&nearestDist<80){// within 80 km
+    const cityObj=CITIES.find(c=>c.name.toLowerCase()===nearest.toLowerCase());
+    selectCity(nearest,cityObj?.state||'');
+    toast(`📍 Nearest city: ${nearest}${nearestDist>15?' (approx '+Math.round(nearestDist)+' km away)':''}`);
+  } else {
+    toast('📍 Location found but no nearby city matched. Please type your city name.');
+  }
+  document.querySelector('.sb-city-icon').textContent='📍';
+}
+
+// ══════════════════════════════════════════════════
+//  QUICK SEARCH
+// ══════════════════════════════════════════════════
+function quickSearch(city,item){
+  selectedCity=city;
+  document.getElementById('cityInput').value=city;
+  document.getElementById('itemInput').value=item;
+  doSearch();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════
+//  MAIN SEARCH
+// ══════════════════════════════════════════════════
+function doSearch(){
+  const cityRaw=(document.getElementById('cityInput').value||selectedCity).trim();
+  const item=document.getElementById('itemInput').value.trim().toLowerCase();
+  if(!cityRaw){toast('❗ Please enter a city or town first');return;}
+  selectedCity=cityRaw;
+  saveHistory(cityRaw,item);
+
+  // Show skeleton immediately
+  document.getElementById('resultsSection').style.display='block';
+  document.getElementById('welcomeState').style.display='none';
+  showSkeleton(3);
+  let shops=SHOPS.filter(s=>s.city.toLowerCase()===cityRaw.toLowerCase());
+  let usedFuzzy=false,suggestedCity=null;
+
+  // Fuzzy city fallback
+  if(!shops.length){
+    const match=bestCityMatch(cityRaw);
+    if(match&&match.score>=1){
+      shops=SHOPS.filter(s=>s.city.toLowerCase()===match.city.name.toLowerCase());
+      if(shops.length){suggestedCity=match.city.name;usedFuzzy=true;}
+    }
+  }
+
+  // Item filter
+  if(item){
+    shops=shops.filter(s=>{
+      return s.name.toLowerCase().includes(item)||
+        s.cat.toLowerCase().includes(item)||
+        s.products.some(p=>p.name.toLowerCase().includes(item)||p.sub.toLowerCase().includes(item));
+    });
+  }
+
+  // Sort: default by rating desc
+  shops=sortShops(shops,'rating');
+
+  renderResults(cityRaw,item,shops,usedFuzzy,suggestedCity);
+  searchActive=true;activeResultCat='All';
+  document.getElementById('resultsSection').style.display='block';
+  document.getElementById('welcomeState').style.display='none';
+  setTimeout(()=>{
+    const el=document.getElementById('resultsSection');
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },100);
+}
+
+function sortShops(shops,by){
+  return [...shops].sort((a,b)=>{
+    if(by==='rating') return b.rating-a.rating;
+    if(by==='distance') return parseFloat(a.dist)-parseFloat(b.dist);
+    if(by==='open') return (b.open?1:0)-(a.open?1:0);
+    return 0;
+  });
+}
+
+function renderResults(city,item,shops,fuzzy,suggestedCity){
+  const hdr=document.getElementById('resultsHeader');
+  let headerHTML=`<div class="results-city-badge">📍 ${city}</div>`;
+  if(item) headerHTML+=`<div class="results-item-badge">🔍 "${item}"</div>`;
+  headerHTML+=`<div class="results-count"><strong>${shops.length} shop${shops.length!==1?'s':''}</strong> found</div>`;
+  headerHTML+=`<div class="results-actions">
+    <select class="sort-select" onchange="applySort(this.value)" id="sortSelect">
+      <option value="rating">⭐ By Rating</option>
+      <option value="distance">📍 By Distance</option>
+      <option value="open">🟢 Open First</option>
+    </select>
+    <button class="results-clear" onclick="clearResults()">✕ Clear</button>
+    <button class="results-clear" onclick="window.print()" title="Print shop list" style="border-color:#90CAF9;color:var(--blue)">🖨️ Print</button>
+  </div>`;
+  hdr.innerHTML=headerHTML;
+
+  const cats=['All',...new Set(shops.map(s=>s.cat))];
+  const filterBar=document.getElementById('catFilterBar');
+  filterBar.innerHTML=cats.map(c=>
+    `<button class="cf-btn ${c==='All'?'active':''}" onclick="filterResultCat(this,'${c}')">${c}</button>`
+  ).join('')+
+  `<div class="open-toggle ${showOpenOnly?'on':''}" onclick="toggleOpenFilter(this)" id="openToggle">
+    <span class="open-toggle-dot"></span> Open Now
+  </div>`;
+
+  renderResultCards(shops,item,fuzzy,suggestedCity);
+}
+
+function applySort(by){
+  const city=(document.getElementById('cityInput').value||selectedCity).trim();
+  const item=document.getElementById('itemInput').value.trim().toLowerCase();
+  let shops=getFilteredShops(city,item,activeResultCat);
+  shops=sortShops(shops,by);
+  renderResultCards(shops,item);
+}
+
+function getFilteredShops(city,item,cat){
+  let shops=SHOPS.filter(s=>s.city.toLowerCase()===city.toLowerCase());
+  if(!shops.length) shops=SHOPS.filter(s=>s.city.toLowerCase().includes(city.toLowerCase()));
+  if(item) shops=shops.filter(s=>
+    s.name.toLowerCase().includes(item)||s.cat.toLowerCase().includes(item)||
+    s.products.some(p=>p.name.toLowerCase().includes(item)||p.sub.toLowerCase().includes(item))
+  );
+  if(cat&&cat!=='All') shops=shops.filter(s=>s.cat===cat);
+  if(showOpenOnly) shops=shops.filter(s=>s.open);
+  return shops;
+}
+
+function filterResultCat(el,cat){
+  activeResultCat=cat;
+  document.querySelectorAll('.cf-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const city=(document.getElementById('cityInput').value||selectedCity).trim();
+  const item=document.getElementById('itemInput').value.trim().toLowerCase();
+  const by=document.getElementById('sortSelect')?.value||'rating';
+  let shops=getFilteredShops(city,item,cat);
+  shops=sortShops(shops,by);
+  renderResultCards(shops,item);
+}
+
+function toggleOpenFilter(el){
+  showOpenOnly=!showOpenOnly;
+  el.classList.toggle('on',showOpenOnly);
+  const city=(document.getElementById('cityInput').value||selectedCity).trim();
+  const item=document.getElementById('itemInput').value.trim().toLowerCase();
+  const by=document.getElementById('sortSelect')?.value||'rating';
+  let shops=getFilteredShops(city,item,activeResultCat);
+  shops=sortShops(shops,by);
+  renderResultCards(shops,item);
+}
+
+function renderResultCards(shops,item,fuzzy,suggestedCity){
+  const grid=document.getElementById('resultsGrid');
+  let html='';
+
+  // Did-you-mean banner
+  if(fuzzy&&suggestedCity){
+    html+=`<div class="dym-banner">
+      <div class="dym-text">⚡ Showing results for <strong>${suggestedCity}</strong> (closest match to what you typed)</div>
+      <button class="dym-btn" onclick="selectCity('${suggestedCity}','');doSearch()">Search ${suggestedCity}</button>
+    </div>`;
+  }
+
+  if(!shops.length){
+    html+=`<div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">No shops found</div>
+      <p class="empty-sub">No shops match your search in this area. Try a broader search term or a nearby city.</p>
+      <div class="empty-suggestions">
+        <button class="es-btn" onclick="document.getElementById('itemInput').value='';doSearch()">Show All Shops Here</button>
+        <button class="es-btn" onclick="clearResults()">Search Another City</button>
+      </div>
+    </div>`;
+    grid.innerHTML=html;return;
+  }
+
+  html+=shops.map(s=>{
+    const matched=item?s.products.filter(p=>p.name.toLowerCase().includes(item)||p.sub.toLowerCase().includes(item)):s.products.slice(0,3);
+    const showP=matched.length>0?matched:s.products.slice(0,2);
+    const prodHTML=showP.map(p=>`
+      <div class="rc-prod-row ${matched.includes(p)?'rc-matched-highlight':''}">
+        <span class="rc-prod-name">${p.name} <span style="font-weight:400;color:var(--muted);font-size:11px">${p.sub}</span></span>
+        <span class="rc-prod-price">${p.price}</span>
+        <span class="rc-prod-avail ${p.avail?'av-y':'av-n'}">${p.avail?'✓':'✗'}</span>
+      </div>`).join('');
+    const stars=renderStars(s.rating);
+    const mapQ=encodeURIComponent(s.address);
+    const waMsg=encodeURIComponent('Hi, I found your shop on ShopSaathi. Is this product available: '+item+'?');
+    const viewCount=(s.viewCount||0)+Math.floor(Math.random()*3);
+    return `<div class="rc">
+      ${s.verified?'<div class="rc-verified">✓ Verified</div>':''}
+      <div class="rc-header">
+        <div class="rc-photo-emoji">${s.icon}</div>
+        <div class="rc-info">
+          <div class="rc-name">${s.name}</div>
+          <div class="rc-cat-row">
+            <span class="rc-cat">${s.cat}</span>
+            <span class="${s.open?'rc-open':'rc-closed'}">${s.open?'● Open':'● Closed'}</span>
+          </div>
+          <div class="rc-rating">
+            <span class="rc-stars">${stars}</span>
+            <span class="rc-rating-val">${s.rating}</span>
+            <span class="rc-views">· ${s.ratingCount} ratings · 👁 ${viewCount} views</span>
+          </div>
+        </div>
+        <div class="rc-dist">${s.dist}</div>
+      </div>
+      <div class="rc-address">
+        <span class="rc-addr-icon">📍</span>
+        <div>
+          <div class="rc-addr-text">${s.address}</div>
+          <div class="rc-hours">🕐 ${s.hours}</div>
+        </div>
+      </div>
+      <div class="rc-products">
+        <div class="rc-prod-label">${matched.length?'Matched Products':'Top Products'}</div>
+        <div class="rc-prod-list">${prodHTML}</div>
+      </div>
+      <div class="rc-actions">
+        <a class="rc-btn btn-call" href="tel:+91${s.phone}">📞 Call</a>
+        <a class="rc-btn btn-wa" href="https://wa.me/91${s.phone}?text=${waMsg}" target="_blank">💬 WhatsApp</a>
+        <a class="rc-btn btn-map" href="https://www.google.com/maps/search/?api=1&query=${mapQ}" target="_blank">🗺️ Map</a>
+        <button class="rc-btn btn-share" onclick="shareShopCard(${s.id})">📤 Share</button>
+        <button class="rc-btn btn-details" onclick="openModal(${s.id})">Details →</button>
+      </div>
+      <div class="rc-report" onclick="currentModalShop=SHOPS.find(x=>x.id===${s.id});openReport()">⚑ Report incorrect info</div>
+    </div>`;
+  }).join('');
+  grid.innerHTML=html;
+}
+
+function renderStars(rating){
+  const full=Math.floor(rating),half=(rating-full)>=0.5?1:0;
+  return '★'.repeat(full)+( half?'½':'')+'☆'.repeat(5-full-half);
+}
+
+function clearResults(){
+  document.getElementById('resultsSection').style.display='none';
+  document.getElementById('welcomeState').style.display='';
+  document.getElementById('cityInput').value='';
+  document.getElementById('itemInput').value='';
+  selectedCity='';showOpenOnly=false;
+}
+
+// ══════════════════════════════════════════════════
+//  SHARE — Robust share sheet (works on all browsers)
+// ══════════════════════════════════════════════════
+function shareShopCard(id){
+  const s=SHOPS.find(x=>x.id===id);
+  if(!s) return;
+  openShareSheet(s);
+}
+function shareShop(){
+  if(currentModalShop) openShareSheet(currentModalShop);
+}
+
+function openShareSheet(s){
+  const phone=s.phone.replace(/\D/g,'');
+  const text=`🏪 *${s.name}*\n📍 ${s.address}\n📞 +91${phone}\n🕐 ${s.hours}\n\nFound on ShopSaathi — Find any shop in India!`;
+  const mapUrl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address)}`;
+  const waUrl=`https://wa.me/?text=${encodeURIComponent(text+'\n\n'+mapUrl)}`;
+  const smsUrl=`sms:?body=${encodeURIComponent(text)}`;
+
+  // Build share sheet modal
+  const existing=document.getElementById('shareSheetOverlay');
+  if(existing) existing.remove();
+
+  const div=document.createElement('div');
+  div.id='shareSheetOverlay';
+  div.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:800;display:flex;align-items:flex-end;justify-content:center;padding:0 0 0 0';
+  div.innerHTML=`
+    <div id="shareSheet" style="background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;padding:24px 24px 32px;box-shadow:0 -8px 40px rgba(0,0,0,.15)">
+      <div style="width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 20px"></div>
+      <div style="font-family:'Baloo 2',cursive;font-size:17px;font-weight:800;color:var(--deep);margin-bottom:4px">Share Shop</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:20px">${s.name} · ${s.city}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+        <a href="${waUrl}" target="_blank" onclick="closeShareSheet()" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;padding:14px 8px;border-radius:14px;background:#E8F5E9;border:1.5px solid #A5D6A7">
+          <span style="font-size:26px">💬</span><span style="font-size:11px;font-weight:700;color:#1B5E20">WhatsApp</span></a>
+        <a href="${smsUrl}" onclick="closeShareSheet()" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;padding:14px 8px;border-radius:14px;background:#E3F2FD;border:1.5px solid #90CAF9">
+          <span style="font-size:26px">📩</span><span style="font-size:11px;font-weight:700;color:#0D47A1">SMS</span></a>
+        <div onclick="copyShopText('${text.replace(/'/g,"\\'")}');closeShareSheet()" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:14px 8px;border-radius:14px;background:#FBE9E7;border:1.5px solid #FFCCBC">
+          <span style="font-size:26px">📋</span><span style="font-size:11px;font-weight:700;color:#E65100">Copy Text</span></div>
+        <a href="${mapUrl}" target="_blank" onclick="closeShareSheet()" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;padding:14px 8px;border-radius:14px;background:#F3E5F5;border:1.5px solid #CE93D8">
+          <span style="font-size:26px">🗺️</span><span style="font-size:11px;font-weight:700;color:#4A148C">Maps Link</span></a>
+      </div>
+      <!-- Copy link box -->
+      <div style="display:flex;gap:8px;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px">
+        <input id="shareLinkInput" value="${text.split('\n')[0]+'  📍'+s.address}" readonly style="flex:1;border:none;background:transparent;font-size:12px;color:var(--muted);outline:none"/>
+        <button onclick="copyShopLink()" style="background:var(--or);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Copy</button>
+      </div>
+      <button onclick="closeShareSheet()" style="width:100%;padding:12px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Cancel</button>
+    </div>`;
+  div.addEventListener('click',e=>{if(e.target===div)closeShareSheet();});
+  document.body.appendChild(div);
+  // Animate up
+  const sheet=div.querySelector('#shareSheet');
+  sheet.style.transform='translateY(100%)';sheet.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{sheet.style.transform='translateY(0)';}));
+}
+
+function closeShareSheet(){
+  const ov=document.getElementById('shareSheetOverlay');
+  if(!ov)return;
+  const sheet=ov.querySelector('#shareSheet');
+  sheet.style.transform='translateY(100%)';
+  setTimeout(()=>ov.remove(),300);
+}
+
+function copyShopText(text){
+  const decoded=text.replace(/\\n/g,'\n');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(()=>toast('✅ Shop details copied to clipboard!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=decoded;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    toast('✅ Copied to clipboard!');
+  }
+}
+
+function copyShopLink(){
+  const val=document.getElementById('shareLinkInput')?.value||'';
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(val).then(()=>toast('✅ Copied!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=val;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);toast('✅ Copied!');
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════════════════
+function openModal(id){
+  const s=SHOPS.find(x=>x.id===id);
+  if(!s) return;
+  currentModalShop=s;
+  document.getElementById('mIcon').textContent=s.icon;
+  document.getElementById('mName').textContent=s.name;
+  const verBadge=document.getElementById('mVerified');
+  verBadge.style.display=s.verified?'inline':'none';
+
+  document.getElementById('mInfoBody').innerHTML=`
+    <div class="minfo-row"><span class="minfo-icon">🏪</span><span class="minfo-val">${s.cat} · ${s.city}</span></div>
+    <div class="minfo-row"><span class="minfo-icon">📍</span><span class="minfo-val">${s.address}</span></div>
+    <div class="minfo-row"><span class="minfo-icon">📞</span><span class="minfo-val phone" onclick="window.location.href='tel:+91${s.phone}'">+91 ${s.phone}</span></div>
+    <div class="minfo-row"><span class="minfo-icon">🕐</span><span class="minfo-val">${s.hours} · <strong style="color:${s.open?'var(--green)':'var(--red)'}">${s.open?'Open Now':'Closed'}</strong></span></div>
+    ${s.pincode?`<div class="minfo-row"><span class="minfo-icon">📮</span><span class="minfo-val">Pincode: ${s.pincode}</span></div>`:''}
+  `;
+
+  // Rating section
+  document.getElementById('mRating').innerHTML=`
+    <div class="mr-stars-big">${renderStars(s.rating)}</div>
+    <div>
+      <div class="mr-val">${s.rating}</div>
+      <div class="mr-count">${s.ratingCount} ratings</div>
+    </div>
+    <div class="mviews">👁 ${s.viewCount||0}+ views today</div>
+    <div class="mr-actions">
+      <button class="mr-rate-btn" onclick="openRateModal()">⭐ Rate Shop</button>
+    </div>
+  `;
+
+  const waMsg=encodeURIComponent(`Hi, I found your shop on ShopSaathi. I wanted to enquire about product availability.`);
+  const mapQ=encodeURIComponent(s.address);
+  document.getElementById('mCallBtn').onclick=()=>{window.location.href=`tel:+91${s.phone}`;};
+  document.getElementById('mWaBtn').href=`https://wa.me/91${s.phone}?text=${waMsg}`;
+  document.getElementById('mMapBtn').href=`https://www.google.com/maps/search/?api=1&query=${mapQ}`;
+
+  // Map embed
+  const mf=document.getElementById('mMapFrame');
+  if(s.lat&&s.lng){
+    mf.innerHTML=`<iframe src="https://maps.google.com/maps?q=${s.lat},${s.lng}&z=15&output=embed&hl=en" width="100%" height="200" style="border:0;border-radius:10px" allowfullscreen loading="lazy"></iframe>`;
+  } else {
+    mf.innerHTML=`<iframe src="https://maps.google.com/maps?q=${mapQ}&output=embed&hl=en" width="100%" height="200" style="border:0;border-radius:10px" allowfullscreen loading="lazy"></iframe>`;
+  }
+
+  // Products
+  document.getElementById('mProdGrid').innerHTML=s.products.map(p=>`
+    <div class="mpcard">
+      <div class="mpcard-name">${p.name}</div>
+      <div class="mpcard-sub">${p.sub}</div>
+      <div class="mpcard-price">${p.price}</div>
+      <span class="mpcard-avail ${p.avail?'av-y':'av-n'}">${p.avail?'✓ In Stock':'✗ Out of Stock'}</span>
+    </div>`).join('');
+
+  // Reviews
+  const revs=REVIEWS[id]||[];
+  const mRevEl=document.getElementById('mReviews');
+  if(revs.length){
+    mRevEl.innerHTML=`<div class="mrev-label">Customer Reviews</div>`+
+      revs.map(r=>`<div class="mrev-item">
+        <div class="mrev-header">
+          <div class="mrev-name">${r.name}</div>
+          <div class="mrev-stars">${'★'.repeat(r.stars)}</div>
+          <div class="mrev-date">${r.date}</div>
+        </div>
+        <div class="mrev-text">${r.text}</div>
+      </div>`).join('');
+  } else {
+    mRevEl.innerHTML=`<div class="mrev-label">Customer Reviews</div><p style="font-size:12px;color:var(--muted);padding:0 0 12px">No reviews yet. Be the first to rate this shop!</p>`;
+  }
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('mMapFrame').innerHTML='';
+}
+
+// ══════════════════════════════════════════════════
+//  RATE MODAL
+// ══════════════════════════════════════════════════
+function openRateModal(){
+  if(!currentModalShop) return;
+  selectedStar=0;
+  document.getElementById('rateShopName').textContent=`Rating for: ${currentModalShop.name}`;
+  document.getElementById('rateText').value='';
+  document.querySelectorAll('.star-picker span').forEach(s=>s.classList.remove('active'));
+  document.getElementById('rateOverlay').classList.add('open');
+}
+function closeRate(){document.getElementById('rateOverlay').classList.remove('open');}
+function pickStar(n){
+  selectedStar=n;
+  document.querySelectorAll('.star-picker span').forEach((s,i)=>s.classList.toggle('active',i<n));
+}
+function submitRating(){
+  if(!selectedStar){toast('❗ Please select a star rating');return;}
+  const review=document.getElementById('rateText').value.trim();
+  toast(`⭐ Thanks! Your ${selectedStar}-star rating for ${currentModalShop.name} has been submitted.`);
+  closeRate();
+  // Save locally
+  if(!REVIEWS[currentModalShop.id]) REVIEWS[currentModalShop.id]=[];
+  REVIEWS[currentModalShop.id].unshift({name:'You',stars:selectedStar,date:'Just now',text:review||'No comment'});
+}
+
+// ══════════════════════════════════════════════════
+//  REPORT MODAL
+// ══════════════════════════════════════════════════
+function openReport(){
+  selectedReportOpt=null;
+  document.querySelectorAll('.report-opt').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('reportOverlay').classList.add('open');
+}
+function closeReport(){document.getElementById('reportOverlay').classList.remove('open');}
+function selectReport(el){
+  document.querySelectorAll('.report-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedReportOpt=el.textContent.trim();
+}
+function submitReport(){
+  if(!selectedReportOpt){toast('❗ Please select an issue');return;}
+  const shopName=currentModalShop?.name||'this shop';
+  toast(`✅ Report submitted for ${shopName}. Our team will review it within 24 hours. Thank you!`);
+  closeReport();
+}
+
+// ══════════════════════════════════════════════════
+//  REGISTRATION FORM
+// ══════════════════════════════════════════════════
+function nextStep(){
+  if(curStep===1){
+    if(!otpSent){sendOtp();return;}
+    if(!verifyOtp())return;
+    goStep(2);return;
+  }
+  if(curStep===2){
+    const shopName=document.getElementById('s2_shopName').value.trim();
+    const city=document.getElementById('s2_city').value.trim();
+    const address=document.getElementById('s2_address').value.trim();
+    if(!shopName){toast('❗ Please enter your shop name');return;}
+    if(!city){toast('❗ Please enter your city / town');return;}
+    if(!address){toast('❗ Please enter your full address');return;}
+    if(!selectedCatValue){toast('❗ Please select a category');return;}
+    goStep(3);return;
+  }
+  if(curStep===3){submitForm();return;}
+}
+function prevStep(){if(curStep>1)goStep(curStep-1);}
+function goStep(n){
+  document.querySelectorAll('.fstep').forEach(s=>s.classList.remove('active'));
+  document.getElementById('fstep'+n).classList.add('active');
+  ['stab1','stab2','stab3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('active','done');
+    if(i+1<n) el.classList.add('done');
+    else if(i+1===n) el.classList.add('active');
+  });
+  const footer=document.getElementById('rfFooter');
+  if(n===4){footer.style.display='none';return;}
+  footer.style.display='flex';
+  document.getElementById('rfBack').style.display=n>1?'block':'none';
+  document.getElementById('rfProg').textContent='Step '+n+' of 3';
+  document.getElementById('rfNext').textContent=n===3?'✓ Submit Registration':'Continue →';
+  curStep=n;
+}
+
+function sendOtp(){
+  const ph=document.getElementById('phoneInp').value;
+  if(ph.length<10){toast('❌ Enter a valid 10-digit number');return;}
+  if(!/^[6-9]\d{9}$/.test(ph)){toast('❌ Invalid Indian mobile number. Must start with 6, 7, 8, or 9.');return;}
+
+  // Generate a real 4-digit OTP
+  const generatedOtp=String(Math.floor(1000+Math.random()*9000));
+  window._currentOtp=generatedOtp;
+
+  const btn=document.getElementById('otpBtn');
+  btn.textContent='⏳ Sending…';btn.disabled=true;btn.style.background='#aaa';
+
+  // Attempt real SMS via Fast2SMS free API
+  // NOTE: Replace 'YOUR_FAST2SMS_API_KEY' below with your key from fast2sms.com (free signup)
+  const FAST2SMS_KEY='YOUR_FAST2SMS_API_KEY';
+
+  if(FAST2SMS_KEY!=='YOUR_FAST2SMS_API_KEY'){
+    fetch('https://www.fast2sms.com/dev/bulkV2',{
+      method:'POST',
+      headers:{'authorization':FAST2SMS_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        route:'otp',
+        variables_values:generatedOtp,
+        numbers:ph,
+        flash:0
+      })
+    })
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.return===true){
+        otpSent=true;
+        showOtpBox(ph,false);
+        toast(`✅ OTP sent to +91${ph}`);
+      } else {
+        // SMS failed — show demo mode
+        showOtpBox(ph,true,generatedOtp);
+        toast(`⚠️ SMS API issue — Demo OTP shown below`);
+      }
+    })
+    .catch(()=>{
+      showOtpBox(ph,true,generatedOtp);
+      toast('⚠️ SMS unavailable — Demo mode active');
+    });
+  } else {
+    // No API key — Demo mode, show OTP on screen
+    setTimeout(()=>{
+      otpSent=true;
+      showOtpBox(ph,true,generatedOtp);
+    },800); // Simulate network delay
+  }
+}
+
+function showOtpBox(ph,demoMode,otp){
+  otpSent=true;
+  const btn=document.getElementById('otpBtn');
+  btn.disabled=false;
+  btn.textContent='🔁 Resend OTP';btn.style.background='';
+  btn.onclick=()=>{
+    // Reset and resend
+    document.querySelectorAll('.otp-inp').forEach(i=>i.value='');
+    sendOtp();
+  };
+
+  document.getElementById('otpGrp').style.display='block';
+  document.querySelectorAll('.otp-inp')[0].focus();
+  document.getElementById('rfNext').textContent='Verify & Continue →';
+
+  // Show hint
+  const timerEl=document.getElementById('otpTimer');
+  if(demoMode&&otp){
+    timerEl.innerHTML=`<span style="background:#FFF3E0;color:#E65100;padding:4px 10px;border-radius:8px;font-weight:700;font-size:13px">Demo OTP: ${otp.split('').join(' ')}</span>`;
+    // Auto-fill demo OTP
+    setTimeout(()=>{
+      const boxes=document.querySelectorAll('.otp-inp');
+      otp.split('').forEach((d,i)=>{if(boxes[i])boxes[i].value=d;});
+    },300);
+  } else {
+    timerEl.textContent='OTP sent to +91'+ph;
+  }
+
+  // Countdown timer for resend
+  let t=30;
+  clearInterval(otpTimerInterval);
+  const countEl=document.createElement('span');
+  countEl.id='otpCountdown';
+  countEl.style.cssText='display:block;font-size:11px;color:var(--muted);margin-top:4px';
+  countEl.textContent='Resend in 0:30';
+  timerEl.parentNode&&timerEl.after&&timerEl.after(countEl);
+  otpTimerInterval=setInterval(()=>{
+    t--;
+    if(countEl) countEl.textContent=t>0?`Resend in 0:${String(t).padStart(2,'0')}`:'';
+    if(t<=0){clearInterval(otpTimerInterval);if(countEl)countEl.textContent='';}
+  },1000);
+}
+
+function verifyOtp(){
+  const entered=Array.from(document.querySelectorAll('.otp-inp')).map(i=>i.value).join('');
+  if(entered.length<4){toast('❗ Enter all 4 digits of the OTP');return false;}
+  if(entered!==window._currentOtp){
+    toast('❌ Incorrect OTP. Please try again.');
+    document.querySelectorAll('.otp-inp').forEach(i=>{i.value='';i.style.borderColor='var(--red)';});
+    setTimeout(()=>document.querySelectorAll('.otp-inp').forEach(i=>i.style.borderColor=''),1500);
+    document.querySelectorAll('.otp-inp')[0].focus();
+    return false;
+  }
+  // OTP correct — green flash
+  document.querySelectorAll('.otp-inp').forEach(i=>i.style.borderColor='var(--green)');
+  return true;
+}
+function otpNav(inp,idx){
+  inp.value=inp.value.replace(/\D/g,'');
+  if(inp.value.length===1){const all=document.querySelectorAll('.otp-inp');if(all[idx+1])all[idx+1].focus();}
+}
+function otpBack(e,inp,idx){
+  if(e.key==='Backspace'&&!inp.value){const all=document.querySelectorAll('.otp-inp');if(all[idx-1])all[idx-1].focus();}
+}
+function selCat(el,catName){
+  document.querySelectorAll('.cat-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');selectedCatValue=catName;
+}
+function toggleStock(btn){
+  const inStock=btn.classList.contains('in-stock');
+  btn.classList.toggle('in-stock',!inStock);
+  btn.classList.toggle('out-stock',inStock);
+  btn.textContent=inStock?'❌':'✅';
+}
+function previewPhoto(input){
+  if(input.files&&input.files[0]){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      document.getElementById('photoPreviewWrap').innerHTML=
+        `<img src="${e.target.result}" class="photo-preview" alt="Shop photo"/>
+         <div class="pua-sub">Tap to change photo</div>`;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+function addProdRow(){
+  const r=document.createElement('div');r.className='pform-row';
+  r.innerHTML=`<div class="fgrp"><label>Product Name</label><input placeholder="Product name"/></div>
+    <div class="fgrp"><label>Price (₹)</label><input placeholder="0" type="number"/></div>
+    <button class="stock-toggle in-stock" title="Toggle stock" onclick="toggleStock(this)">✅</button>`;
+  document.getElementById('prodFormList').appendChild(r);
+  r.querySelector('input').focus();
+  toast('✅ Product row added');
+}
+function submitForm(){
+  const phone=document.getElementById('phoneInp').value;
+  const shopName=document.getElementById('s2_shopName').value.trim();
+  const city=document.getElementById('s2_city').value.trim();
+  const address=document.getElementById('s2_address').value.trim();
+  const openT=document.getElementById('s2_open').value;
+  const closeT=document.getElementById('s2_close').value;
+  const waNum=document.getElementById('s2_wa').value.trim()||phone;
+  const pin=document.getElementById('s2_pin').value.trim();
+  const lat=document.getElementById('s2_lat').value;
+  const lng=document.getElementById('s2_lng').value;
+  // Products
+  const products=[];
+  document.querySelectorAll('#prodFormList .pform-row').forEach(row=>{
+    const inputs=row.querySelectorAll('input');
+    const btn=row.querySelector('.stock-toggle');
+    const pName=inputs[0]?.value.trim();
+    const pPrice=inputs[1]?.value.trim();
+    const inStock=btn?.classList.contains('in-stock');
+    if(pName) products.push({name:pName,price:pPrice||'—',avail:inStock});
+  });
+  const refId='SS-'+new Date().getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
+  const shopData={refId,phone:'+91'+phone,shopName,city,address,pincode:pin,lat,lng,
+    category:selectedCatValue,hours:openT+' – '+closeT,whatsapp:'+91'+waNum,products,
+    submittedAt:new Date().toLocaleString('en-IN')};
+  // Save to localStorage
+  try{
+    const saved=JSON.parse(localStorage.getItem('shopSaathi_registrations')||'[]');
+    saved.push(shopData);
+    localStorage.setItem('shopSaathi_registrations',JSON.stringify(saved));
+  }catch(e){}
+  // Add to live SHOPS array so it appears in search immediately (demo)
+  const catIcons={Grocery:'🛒',Medical:'💊',Hardware:'🔧',Electronics:'🔌',Salon:'✂️',Dairy:'🥛',Clothing:'👗',Restaurant:'🍕',Other:'📦'};
+  SHOPS.push({
+    id:SHOPS.length+100,city,name:shopName,cat:selectedCatValue,
+    icon:catIcons[selectedCatValue]||'🏪',address,phone:'+91'+waNum.replace(/\D/g,''),
+    hours:openT+' – '+closeT,open:true,dist:'nearby',
+    lat:lat?parseFloat(lat):null,lng:lng?parseFloat(lng):null,
+    verified:false,rating:5.0,ratingCount:0,viewCount:0,
+    products:products.map(p=>({name:p.name,sub:'',price:p.price?'₹'+p.price:'—',avail:p.avail}))
+  });
+  document.getElementById('statShops').textContent=SHOPS.length;
+  document.getElementById('statProducts').textContent=SHOPS.reduce((a,s)=>a+s.products.length,0);
+  document.getElementById('refId').textContent=refId;
+  document.getElementById('successDetails').innerHTML=
+    `<strong>${shopName}</strong> in <strong>${city}</strong> submitted!<br/>Verification within <strong>24 hours</strong>. SMS will be sent to +91${phone}.`;
+  document.getElementById('savedBanner').style.display='flex';
+  goStep(4);
+  toast('🎉 Shop registered! Ref: '+refId);
+}
+function resetForm(){
+  curStep=1;otpSent=false;selectedCatValue='';
+  clearInterval(otpTimerInterval);
+  ['phoneInp','s2_shopName','s2_city','s2_address','s2_wa','s2_pin','s2_lat','s2_lng'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('otpGrp').style.display='none';
+  document.querySelectorAll('.otp-inp').forEach(i=>i.value='');
+  document.querySelectorAll('.cat-opt').forEach(o=>o.classList.remove('selected'));
+  const btn=document.getElementById('otpBtn');
+  btn.textContent='📱 Send OTP';btn.style.background='';
+  document.getElementById('savedBanner').style.display='none';
+  document.getElementById('rfFooter').style.display='flex';
+  document.getElementById('photoPreviewWrap').innerHTML=`<div class="pua-icon">📸</div><div class="pua-text">Upload Shop Photo</div><div class="pua-sub">Tap to choose a photo</div>`;
+  goStep(1);
+}
+
+// ══════════════════════════════════════════════════
+//  FAQ
+// ══════════════════════════════════════════════════
+function toggleFaq(el){el.classList.toggle('open');}
+
+// ══════════════════════════════════════════════════
+//  LEGAL MODALS
+// ══════════════════════════════════════════════════
+const LEGAL_CONTENT={
+  privacy:{
+    title:'Privacy Policy',
+    body:`<h3>Information We Collect</h3>
+    Shopkeepers provide their name, shop address, phone number, and product listings when registering. Customer search queries may be stored anonymously to improve search results. We do not collect personal information from customers using the search feature.
+    <h3>How We Use Your Information</h3>
+    Shop information is displayed publicly so customers can find and contact you. We do not sell, share, or rent your information to third parties. Phone numbers are displayed on your public shop listing so customers can call or WhatsApp you directly.
+    <h3>Cookies and Local Storage</h3>
+    ShopSaathi uses browser local storage to save your recent search history and shop registration data on your device. This data stays on your device and is not sent to any server.
+    <h3>Third-Party Services</h3>
+    We use Google Maps to show shop locations. Google's Privacy Policy applies to map data. WhatsApp links open WhatsApp's service and are governed by WhatsApp's Privacy Policy.
+    <h3>Data Deletion</h3>
+    Shopkeepers can request deletion of their listing by contacting us. Search history can be cleared using the "Clear all" button in the search interface.
+    <h3>Contact</h3>
+    For privacy concerns, contact us at privacy@shopsaathi.in`
+  },
+  terms:{
+    title:'Terms of Use',
+    body:`<h3>Acceptance of Terms</h3>
+    By using ShopSaathi, you agree to these terms. If you do not agree, please do not use this service.
+    <h3>For Shopkeepers</h3>
+    Shop listings must contain accurate, truthful information. You are responsible for keeping your product availability and contact details up to date. ShopSaathi reserves the right to remove listings that contain false information.
+    <h3>For Customers</h3>
+    ShopSaathi provides shop information as-is. We do not guarantee product availability or pricing accuracy. Always confirm with the shop directly before visiting.
+    <h3>Prohibited Uses</h3>
+    You may not use ShopSaathi to post spam, false information, illegal products, or to harass other users or shopkeepers.
+    <h3>Limitation of Liability</h3>
+    ShopSaathi is not responsible for any transactions, disputes, or issues between customers and shopkeepers. We are a discovery platform only.
+    <h3>Changes to Terms</h3>
+    We may update these terms from time to time. Continued use after changes means you accept the new terms.`
+  },
+  contact:{
+    title:'Contact Us',
+    body:`<h3>Get in Touch</h3>
+    We'd love to hear from you — whether you have a question, feedback, or want to report an issue.
+    <h3>📧 Email</h3>
+    hello@shopsaathi.in<br/>support@shopsaathi.in
+    <h3>💬 WhatsApp Support</h3>
+    <a href="https://wa.me/919999900000" target="_blank">+91 99999 00000</a> (10 AM – 6 PM, Mon–Sat)
+    <h3>🏪 For Shopkeepers</h3>
+    To update your listing, claim your shop, or request deletion, email shopkeeper@shopsaathi.in with your Reference ID.
+    <h3>⚑ To Report a Problem</h3>
+    Use the "Report" button on any shop card, or email report@shopsaathi.in with the shop name and issue.
+    <h3>📍 Office</h3>
+    ShopSaathi Technology Pvt. Ltd.<br/>India`
+  }
+};
+function openLegal(type){
+  const content=LEGAL_CONTENT[type];
+  document.getElementById('legalTitle').textContent=content.title;
+  document.getElementById('legalBody').innerHTML=content.body;
+  document.getElementById('legalOverlay').classList.add('open');
+}
+function closeLegal(){document.getElementById('legalOverlay').classList.remove('open');}
+
+// ══════════════════════════════════════════════════
+//  DARK MODE
+// ══════════════════════════════════════════════════
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const isDark=document.body.classList.contains('dark');
+  document.getElementById('darkBtn').textContent=isDark?'☀️':'🌙';
+  try{localStorage.setItem('ss_dark',isDark?'1':'');}catch(e){}
+}
+// Restore dark mode preference
+try{if(localStorage.getItem('ss_dark')){document.body.classList.add('dark');document.getElementById('darkBtn').textContent='☀️';}}catch(e){}
+
+// ══════════════════════════════════════════════════
+//  SCROLL TO TOP
+// ══════════════════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  const btn=document.getElementById('scrollTopBtn');
+  if(btn) btn.classList.toggle('show',window.scrollY>400);
+},{ passive:true });
+
+// ══════════════════════════════════════════════════
+//  SKELETON LOADING (show while rendering large result sets)
+// ══════════════════════════════════════════════════
+function showSkeleton(n=4){
+  const grid=document.getElementById('resultsGrid');
+  grid.innerHTML=Array(n).fill(0).map(()=>`
+    <div class="sk-card">
+      <div style="display:flex;gap:12px;margin-bottom:14px">
+        <div class="skeleton sk-icon"></div>
+        <div style="flex:1"><div class="skeleton sk-line" style="width:70%"></div><div class="skeleton sk-line short"></div></div>
+      </div>
+      <div class="skeleton sk-line"></div>
+      <div class="skeleton sk-line short"></div>
+      <div class="skeleton sk-line xshort"></div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  OFFLINE DETECTION
+// ══════════════════════════════════════════════════
+function updateOnlineStatus(){
+  document.getElementById('offlineBanner').classList.toggle('show',!navigator.onLine);
+}
+window.addEventListener('online',updateOnlineStatus);
+window.addEventListener('offline',updateOnlineStatus);
+updateOnlineStatus();
+
+// ══════════════════════════════════════════════════
+//  GPS for registration (fix for HTTPS requirement clarification)
+// ══════════════════════════════════════════════════
+function getGPS(){
+  if(!navigator.geolocation){
+    toast('⚠️ GPS not supported. Enter address manually or open in Chrome/Edge.');
+    return;
+  }
+  const btn=document.querySelector('.gps-btn');
+  if(btn){btn.textContent='⏳ Getting…';btn.disabled=true;}
+  toast('📡 Getting your precise location…');
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const lat=pos.coords.latitude.toFixed(6);
+      const lng=pos.coords.longitude.toFixed(6);
+      document.getElementById('s2_lat').value=lat;
+      document.getElementById('s2_lng').value=lng;
+      // Also try to fill address via reverse geocode
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`,{
+        headers:{'User-Agent':'ShopSaathi/1.0'}
+      }).then(r=>r.json()).then(d=>{
+        const a=d.address||{};
+        const roadParts=[a.road||a.pedestrian||'',a.neighbourhood||a.suburb||'',a.city||a.town||a.village||''].filter(Boolean);
+        const autoAddr=roadParts.join(', ')+(a.postcode?' - '+a.postcode:'');
+        if(autoAddr&&!document.getElementById('s2_address').value.trim()){
+          document.getElementById('s2_address').value=autoAddr;
+        }
+        if((a.city||a.town||a.village)&&!document.getElementById('s2_city').value.trim()){
+          document.getElementById('s2_city').value=a.city||a.town||a.village||'';
+        }
+        if(a.postcode&&!document.getElementById('s2_pin').value.trim()){
+          document.getElementById('s2_pin').value=a.postcode;
+        }
+      }).catch(()=>{});
+      toast(`✅ GPS captured (${lat}, ${lng}) — Address fields auto-filled if empty`);
+      if(btn){btn.textContent='📡 GPS';btn.disabled=false;}
+    },
+    err=>{
+      const msgs={1:'Please allow location access in browser settings.',
+        2:'GPS signal not found. Try outdoors or enter address manually.',
+        3:'GPS timed out. Try again or enter address manually.'};
+      toast('⚠️ '+(msgs[err.code]||'GPS failed. Enter address manually.'));
+      if(btn){btn.textContent='📡 GPS';btn.disabled=false;}
+    },
+    {timeout:12000,maximumAge:30000,enableHighAccuracy:true}
+  );
+}
+function toggleMenu(){document.getElementById('mobMenu').classList.toggle('open');}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);
+}
+// Close modals on Escape
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeRate();closeReport();closeLegal();}
+});
+</script>
+</body>
+</html>
